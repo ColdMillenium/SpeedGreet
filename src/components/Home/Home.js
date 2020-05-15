@@ -9,7 +9,6 @@ export default class Home extends Component {
             mediaState: "OFF",
             medaiConstraints: {video: true, audio: false},
             errorMsg: "",
-            localstream: null
         }
       }
     errorMsg(msg){
@@ -61,6 +60,15 @@ export default class Home extends Component {
         this.setState(newState);
         return newState;
     }
+    streamButton(){
+        let text = "";
+        if(this.state.mediaState === "ON"){
+            text = "END STREAM";
+        }else{
+            text = "START STREAM";
+        }
+        return <Button onClick={() => this.stream()} variant="contained" color="secondary">{text}</Button>
+    }
     render() {
         return (
             <div>
@@ -79,9 +87,7 @@ export default class Home extends Component {
                     <div className="content-container">
                     <div className="active-users-panel" id="active-user-container">
                         <h3 className="panel-title">Active Users:</h3>
-                        <Button onClick={() => this.stream()} variant="contained" color="secondary">
-                            Stream of DOOM
-                        </Button>
+                        {this.streamButton()}
                     </div>
                     <div className="video-chat-container">
                         <h2 className="talk-info" id="talking-with-info"> 
