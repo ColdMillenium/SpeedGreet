@@ -1,0 +1,12 @@
+.input{
+    display: flex;
+    height: 2em;
+    flex: 1;
+    background-color: #000;
+    outline: 1px solid #888;
+    color: white;
+    justify-content: flex-end; /*seems to align horizontally*/
+    font-weight: bold;
+    font-size: 3em;
+    align-items: center; /*seems to align kind of vetically*/
+}
