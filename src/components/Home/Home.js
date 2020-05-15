@@ -8,7 +8,8 @@ export default class Home extends Component {
         this.state = {
             mediaState: "OFF",
             medaiConstraints: {video: true, audio: false},
-            errorMsg: ""
+            errorMsg: "",
+            localstream: null
         }
       }
     errorMsg(msg){
@@ -19,11 +20,17 @@ export default class Home extends Component {
     }
     stream(){
         let newState = {...this.state};
+        var video = this.localVideoRef.current;
         if(newState.mediaState === "ON"){
             newState.mediaState = "OFF";
-            //???
+            const stream = video.srcObject;
+            const tracks = stream.getTracks();
+
+            tracks.forEach(function(track) {
+                track.stop();
+            });
+            video.srcObject = null;
         }else{
-            var video = this.localVideoRef.current;
             var constraints = newState.medaiConstraints;
             newState.mediaState = "ON";
             
@@ -35,7 +42,7 @@ export default class Home extends Component {
                 stream.onremovetrack = function() {
                   console.log('Stream ended');
                 };
-                window.stream = stream; // make variable available to browser console
+                //window.stream = stream; // make variable available to browser console
                 video.srcObject = stream;
             }).catch(function(error){
                 if (error.name === 'ConstraintNotSatisfiedError') {
