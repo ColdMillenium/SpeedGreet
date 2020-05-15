@@ -1,6 +1,4 @@
 import React from 'react';
-import Grid from '@material-ui/core/Grid';
-// import Button from '@material-ui/core/Button';
 import Button from './Button.js';
 import './Calculator.css';
 import CalcInput from './CalcInput.js';
@@ -60,8 +58,8 @@ export default class Calculator extends React.Component{
     addZeroToInput = val => {
         let newState = {...this.state}
         //only adds zero if empty
-        if((newState.input !== ""  && newState.input != "0") 
-        || (newState.input === "" && newState.operator != "" && newState.input != "0")){
+        if((newState.input !== ""  && newState.input !== "0") 
+        || (newState.input === "" && newState.operator !== "" && newState.input !== "0")){
             newState = this.addToInput(val)
             this.setState(newState);
         }
@@ -73,15 +71,15 @@ export default class Calculator extends React.Component{
             return newState;
         }
         //if everything is empty let's not add any operators
-        if(newState.op == "" && newState.input == "" && newState.previousNumber == ""){
+        if(newState.op === "" && newState.input === "" && newState.previousNumber === ""){
             return newState;
         }
         // reformats something like 5+5+ => 10, then adds the operator below
-        if(newState.op != "" && newState.input != "" && newState.previousNumber != ""){
+        if(newState.op !== "" && newState.input !== "" && newState.previousNumber !== ""){
             newState = this.evaluate();
         }
         //if you already pressed an operator but didnt combine it with anything let's remove it so it can be replaced.
-        if(newState.op != "" && newState.input == ""){
+        if(newState.op !== "" && newState.input === ""){
             newState = {...newState, 
                 operator:"",
                 input: newState.previousNumber,
@@ -128,7 +126,7 @@ export default class Calculator extends React.Component{
                 input: prev - curr + "",
             };
         }else if (op === '/'){
-            if(curr == 0){
+            if(curr === 0){
                 newState = {...newState,
                     input: "err:divByZero",
                     isError: true
