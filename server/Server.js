@@ -15,11 +15,13 @@ io.on('connection', socket => {
         if (!users[socket.id]) {
             users[socket.id] = userName;
             io.sockets.emit("allUsers", users);
+            console.log(users);
         }
     });
     
     socket.on('disconnect', () => {
         delete users[socket.id];
+        io.sockets.emit("allUsers", users);
     })
 
     socket.on("callUser", (data) => {

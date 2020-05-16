@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import Calculator from './components/Calculator/calculator';
 import Home from './components/Home/Home';
 import Chat from './components/Chat/Chat';
+import Meet from './components/Meet/Meet'
 import Button from '@material-ui/core/Button';
 import logo from './logo.svg';
 import './App.css';
@@ -66,7 +67,7 @@ export default class App extends Component {
     return <div>
       {this.menuButton("HOME")}
       {this.menuButton("CALC")}
-      <h1>SETTINGS</h1>
+      <Meet></Meet>
       
       </div>;
   }

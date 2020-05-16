@@ -20,6 +20,15 @@ export default function Chat() {
     
     useEffect(()=>{
         socket.current = io.connect("/");
+        if(callAccepted){
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
+            setStream(stream);
+            if (userVideo.current) {
+              userVideo.current.srcObject = stream;
+            }
+            console.log('bruh');
+        })
+        }
         socket.current.on("yourID", (id) => {
             setYourID(id);
             socket.current.emit("yourUserName", userName);
@@ -36,16 +45,16 @@ export default function Chat() {
         
     }, []);
     function callPeer(id) {
-        navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
-            setStream(stream);
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(newStream => {
+            setStream(newStream);
             if (userVideo.current) {
-              userVideo.current.srcObject = stream;
+              userVideo.current.srcObject = newStream;
             }
-        }).then(() => {
+            console.log("calling someone bruh");
             const peer = new Peer({
                 initiator: true,
                 trickle: false,
-                stream: stream,
+                stream: newStream,
             });
             
             peer.on("signal", data => {
@@ -53,9 +62,9 @@ export default function Chat() {
                 socket.current.emit("callUser", { userToCall: id, signalData: data, from: yourID })
             })
         
-            peer.on("stream", stream => {
+            peer.on("stream", PartnerStream => {
                 if (partnerVideo.current) {
-                    partnerVideo.current.srcObject = stream;
+                    partnerVideo.current.srcObject = PartnerStream;
                 }
             });
         
@@ -63,50 +72,52 @@ export default function Chat() {
                 setCallAccepted(true);
                 peer.signal(signal);
             })
-        })
+        }).catch(function(error) {
+            if (error.name === 'PermissionDeniedError') {
+              console.log('Permissions have not been granted to use your camera and ' +
+                'microphone, you need to allow the page access to your devices in ' +
+                'order for the demo to work.');
+            }
+            console.log('getUserMedia error: ' + error.name);
+          });
     }
     
     function acceptCall() {
-        navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
-            setStream(stream);
+       
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(newStream => {
+            setStream(newStream);
             if (userVideo.current) {
-              userVideo.current.srcObject = stream;
+              userVideo.current.srcObject = newStream;
             }
-        }).then(() => {
-            setCallAccepted(true);
+            console.log('accepted call bruh');
             const peer = new Peer({
                 initiator: false,
                 trickle: false,
-                stream: stream,
+                stream: newStream,
             });
             peer.on("signal", data => {
                 socket.current.emit("acceptCall", { signal: data, to: caller })
+                setCallAccepted(true);
             })
-            peer.on("stream", stream => {
-                partnerVideo.current.srcObject = stream;
+            peer.on("stream", partnerStream => {
+                if(partnerVideo.current){
+                    partnerVideo.current.srcObject = partnerStream;
+                }
             });
         
             peer.signal(callerSignal);
-        });
-        setCallAccepted(true);
-        const peer = new Peer({
-          initiator: false,
-          trickle: false,
-          stream: stream,
-        });
-        peer.on("signal", data => {
-          socket.current.emit("acceptCall", { signal: data, to: caller })
-        })
-    
-        peer.on("stream", stream => {
-          partnerVideo.current.srcObject = stream;
-        });
-    
-        peer.signal(callerSignal);
+        }).catch(function(error) {
+            if (error.name === 'PermissionDeniedError') {
+              console.log('Permissions have not been granted to use your camera and ' +
+                'microphone, you need to allow the page access to your devices in ' +
+                'order for the demo to work.');
+            }
+            console.log('getUserMedia error: ' + error.name);
+          });
     }
 
     let UserVideo;
-    if (stream) {
+    if (stream != null) {
     UserVideo = (
         <video ref={userVideo} autoPlay muted className="local-video" id="local-video"></video>
     );
@@ -114,17 +125,17 @@ export default function Chat() {
     
     let PartnerVideo;
     if (callAccepted) {
-    PartnerVideo = (
-        <video ref={partnerVideo}autoPlay className="remote-video" id="remote-video"></video>
-    );
+        PartnerVideo = (
+            <video ref={partnerVideo}autoPlay className="remote-video" id="remote-video"></video>
+        );
     }
     
     let incomingCall;
-    if (receivingCall) {
+    if (receivingCall && !callAccepted) {
         incomingCall = (
         <div>
-            <h1>{users[caller]} is calling you</h1>
-            <button onClick={acceptCall}>Accept</button>
+            <h1>{users[caller]}:{caller} is calling you</h1>
+            <button onClick={() => acceptCall()}>Accept</button>
         </div>
         )
     }
@@ -143,17 +154,17 @@ export default function Chat() {
                     <div className="content-container">
                     <div className="active-users-panel" id="active-user-container">
                         <h3 className="panel-title">Active Users:</h3>
-                        <ul>
+                        
                             {Object.keys(users).map(key => {
                                 if (key === yourID) {
                                     return null;
                                 }
                                 return (
 
-                                    <button className="user" onClick={() => callPeer(key)}>Call {users[key]}</button>
+                                    <button key={key} className="user" onClick={() => callPeer(key)}>Call {users[key]}</button>
                                 );
                             })}
-                        </ul>
+                       
                        
                         {/* {this.streamButton()} */}
                     </div>
