@@ -65,6 +65,7 @@ export default function Chat() {
             peer.on("stream", PartnerStream => {
                 if (partnerVideo.current) {
                     partnerVideo.current.srcObject = PartnerStream;
+                    console.log("got receipient's stream!");
                 }
             });
         
@@ -86,6 +87,7 @@ export default function Chat() {
        
         navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(newStream => {
             setStream(newStream);
+            setCallAccepted(true);
             if (userVideo.current) {
               userVideo.current.srcObject = newStream;
             }
@@ -97,12 +99,12 @@ export default function Chat() {
             });
             peer.on("signal", data => {
                 socket.current.emit("acceptCall", { signal: data, to: caller })
-                setCallAccepted(true);
             })
             peer.on("stream", partnerStream => {
-                if(partnerVideo.current){
-                    partnerVideo.current.srcObject = partnerStream;
-                }
+                console.log(partnerStream);
+                partnerVideo.current.srcObject = partnerStream;
+                console.log("got caller's stream!");
+                
             });
         
             peer.signal(callerSignal);
