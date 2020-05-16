@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import './Home.css'
 import Button from '@material-ui/core/Button';
+import Meet from '../Meet/Meet'
 export default class Home extends Component {
     constructor(props){
         super(props);
@@ -102,6 +103,7 @@ export default class Home extends Component {
                 </div>
                 <script src="./scripts/index.js"></script>
                 </div>
+                <Meet></Meet>
             </div>
         )
     }
