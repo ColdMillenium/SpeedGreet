@@ -2,6 +2,7 @@ import React, {useEffect, useState, useRef} from 'react';
 import io from "socket.io-client";
 import Peer from "simple-peer";
 import Button from '@material-ui/core/Button'
+import './Chat.css'
 
 export default function Chat() {
     const [yourID, setYourID] = useState("");
@@ -11,8 +12,8 @@ export default function Chat() {
     const [caller, setCaller] = useState("");
     const [callerSignal, setCallerSignal] = useState();
     const [callAccepted, setCallAccepted] = useState(false);
-    const [isStreaming, setIsStreaming] = useState(false);
-    const [userName, setUserName] = useState("user" + Math.floor((Math.random() * 100) + 1));
+    //const [isStreaming, setIsStreaming] = useState(false);
+    const userName = "user" + Math.floor((Math.random() * 100) + 1);
 
     const userVideo = useRef();
     const partnerVideo = useRef();
@@ -43,7 +44,7 @@ export default function Chat() {
             console.log("receiving call dawg");
         })
         
-    }, []);
+    },[]);
     function callPeer(id) {
         navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(newStream => {
             setStream(newStream);

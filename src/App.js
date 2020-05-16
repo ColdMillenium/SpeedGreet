@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import Calculator from './components/Calculator/calculator';
-import Home from './components/Home/Home';
 import Chat from './components/Chat/Chat';
-import Meet from './components/Meet/Meet'
 import Button from '@material-ui/core/Button';
 import logo from './logo.svg';
 import './App.css';
@@ -12,7 +10,7 @@ export default class App extends Component {
     super(props);
 
     this.state = {
-        showing: "HOME"
+        showing: "CHAT"
     }
   }
   
@@ -23,7 +21,7 @@ export default class App extends Component {
   }
   changeDisplay = val => {
     let newState = {...this.state};
-    if(val === "CALC" || val === "HOME" || val === "SETTINGS"){
+    if(val === "CALC" || val === "CHAT" || val === "SETTINGS"){
       newState = {...newState, showing: val}
     }
     this.setState(newState);
@@ -35,7 +33,7 @@ export default class App extends Component {
   display(){
     if(this.state.showing === "CALC"){
       return this.calcDisplay();
-    }else if(this.state.showing == "HOME"){
+    }else if(this.state.showing === "CHAT"){
       return this.homeDisplay();
     }else{
       return this.settingDisplay();
@@ -50,14 +48,14 @@ export default class App extends Component {
   }
   calcDisplay() {
       return <div>
-        {this.menuButton("HOME")}
+        {this.menuButton("CHAT")}
         {this.menuButton("SETTINGS")}
         <Calculator />
       </div>;
   }
   homeDisplay(){
     return <div>
-      {this.menuButton("CALC")}
+      {this.menuButton("CHAT")}
       {this.menuButton("SETTINGS")}
       <Chat></Chat>
       
@@ -65,9 +63,9 @@ export default class App extends Component {
   }
   settingDisplay(){
     return <div>
-      {this.menuButton("HOME")}
+      {this.menuButton("CHAT")}
       {this.menuButton("CALC")}
-      <Meet></Meet>
+      
       
       </div>;
   }
