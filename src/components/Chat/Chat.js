@@ -1,6 +1,7 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState, useRef, createRef} from 'react';
 import io from "socket.io-client";
 import Peer from "simple-peer";
+import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import './Chat.css'
 
@@ -13,26 +14,22 @@ export default function Chat() {
     const [callerSignal, setCallerSignal] = useState();
     const [callAccepted, setCallAccepted] = useState(false);
     //const [isStreaming, setIsStreaming] = useState(false);
-    const userName = "user" + Math.floor((Math.random() * 100) + 1);
+    const [hasUserName, setHasUserName] = useState(false);
+    const [userName, setUserName] = useState("user" + Math.floor((Math.random() * 100) + 1));
+    const [userNameRef, setUserNameRef] = useState();
+    const [canUpdateName, setCanUpdateName] = useState(false);
 
     const userVideo = useRef();
     const partnerVideo = useRef();
     const socket = useRef();
+    const nameRef = createRef();
+    
     
     useEffect(()=>{
         socket.current = io.connect("/");
-        if(callAccepted){
-        navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
-            setStream(stream);
-            if (userVideo.current) {
-              userVideo.current.srcObject = stream;
-            }
-            console.log('bruh');
-        })
-        }
         socket.current.on("yourID", (id) => {
             setYourID(id);
-            socket.current.emit("yourUserName", userName);
+            
         })
         socket.current.on("allUsers", (users) => {
             setUsers(users);
@@ -41,7 +38,7 @@ export default function Chat() {
             setReceivingCall(true);
             setCaller(data.from);
             setCallerSignal(data.signal);
-            console.log("receiving call dawg");
+            //console.log("receiving call dawg");
         })
         
     },[]);
@@ -51,7 +48,7 @@ export default function Chat() {
             if (userVideo.current) {
               userVideo.current.srcObject = newStream;
             }
-            console.log("calling someone bruh");
+            //console.log("calling someone bruh");
             const peer = new Peer({
                 initiator: true,
                 trickle: false,
@@ -59,14 +56,14 @@ export default function Chat() {
             });
             
             peer.on("signal", data => {
-                console.log(id);
+                //console.log(id);
                 socket.current.emit("callUser", { userToCall: id, signalData: data, from: yourID })
             })
         
             peer.on("stream", PartnerStream => {
                 if (partnerVideo.current) {
                     partnerVideo.current.srcObject = PartnerStream;
-                    console.log("got receipient's stream!");
+                    //console.log("got receipient's stream!");
                 }
             });
         
@@ -119,6 +116,8 @@ export default function Chat() {
           });
     }
 
+    
+
     let UserVideo;
     if (stream != null) {
     UserVideo = (
@@ -142,6 +141,64 @@ export default function Chat() {
         </div>
         )
     }
+    function updateName(e){
+        if(nameRef.current!=null){
+            nameRef.current.value = nameRef.current.value.split(' ').join('');
+            setUserName(nameRef.current.value);
+            //console.log(nameRef.current.value);
+        }
+    }
+    function signInEnter(e){
+        if(e.keyCode === 13){
+            commitUserName();
+        }
+    }
+    function commitUserName(){
+        if(userName.length > 3){
+            setHasUserName(true);
+            socket.current.emit("yourUserName", userName);
+        }
+    }
+    let pleaseSelectName;
+    let videoChat;
+    let activeUsers;
+    if(!hasUserName){
+        pleaseSelectName = (
+            <div>
+                <p>Please Sign In:</p>
+                <TextField inputRef={nameRef} onChange={(e) => updateName()} onKeyDown={(e) => signInEnter(e)}id="outlined-basic" label="User Name" variant="outlined" />
+                <Button onClick={() => commitUserName()} variant="contained" color="primary">SignIn</Button>
+   
+            </div>
+        )
+    }else{
+        videoChat = (
+            <div>
+                <h2 className="talk-info" id="talking-with-info"> 
+                    {userName}: Select active user on the left menu.
+                    {incomingCall}
+                </h2>
+                <div className="video-container">
+                    {PartnerVideo}
+                    {UserVideo}
+                </div>
+            </div>
+        );
+        activeUsers = (
+            <div>
+                {Object.keys(users).map(key => {
+                    if (key === yourID) {
+                        return null;
+                    }
+                    return (
+
+                        <button key={key} className="user" onClick={() => callPeer(key)}>Call {users[key]}</button>
+                    );
+                })}
+            </div>
+        )
+    }
+    
     return (
             <div>
                 <div className="container">
@@ -157,29 +214,11 @@ export default function Chat() {
                     <div className="content-container">
                     <div className="active-users-panel" id="active-user-container">
                         <h3 className="panel-title">Active Users:</h3>
-                        
-                            {Object.keys(users).map(key => {
-                                if (key === yourID) {
-                                    return null;
-                                }
-                                return (
-
-                                    <button key={key} className="user" onClick={() => callPeer(key)}>Call {users[key]}</button>
-                                );
-                            })}
-                       
-                       
-                        {/* {this.streamButton()} */}
+                        {activeUsers}
                     </div>
                     <div className="video-chat-container">
-                        <h2 className="talk-info" id="talking-with-info"> 
-                        {userName}: Select active user on the left menu.
-                        {incomingCall}
-                        </h2>
-                        <div className="video-container">
-                            {PartnerVideo}
-                            {UserVideo}
-                        </div>
+                        {pleaseSelectName}
+                        {videoChat}
                     </div>
                     </div>
                 </div>
