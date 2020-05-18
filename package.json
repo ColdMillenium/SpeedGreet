@@ -23,6 +23,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "dist": "electron-builder",
     "electron-dev": "concurrently \"cross-env BROWSER=none npm start\" \"wait-on http://localhost:3000 && electron .\""
   },
   "eslintConfig": {
@@ -45,5 +46,12 @@
     "electron": "^8.2.5",
     "electron-builder": "^22.6.0",
     "wait-on": "^5.0.0"
+  },
+  "build": {
+    "appId": "com.coldmillenium.meetandgreet",
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.ico"
+    }
   }
 }
