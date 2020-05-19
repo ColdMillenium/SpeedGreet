@@ -1,9 +1,12 @@
 import React, {Component} from 'react';
 import Calculator from './components/Calculator/calculator';
 import Chat from './components/Chat/Chat';
+import SignIn from './components/SignIn/SignIn'
 import Button from '@material-ui/core/Button';
+import ClientContextProvider from './contexts/ClientContext'
 import logo from './logo.svg';
 import './App.css';
+import MainMenu from './components/MainMenu/MainMenu';
 
 export default class App extends Component {
   constructor(props){
@@ -16,7 +19,12 @@ export default class App extends Component {
   
   render() {
     return (
-      this.display()
+      <ClientContextProvider>
+        <SignIn></SignIn>
+        <MainMenu></MainMenu>
+        
+      </ClientContextProvider>
+      
     )
   }
   changeDisplay = val => {
@@ -57,7 +65,8 @@ export default class App extends Component {
     return <div>
       {this.menuButton("CHAT")}
       {this.menuButton("SETTINGS")}
-      <Chat></Chat>
+      {/* <Chat></Chat> */}
+      <SignIn></SignIn>
       
       </div>;
   }
