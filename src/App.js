@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 import ClientContextProvider from './contexts/ClientContext'
 import logo from './logo.svg';
 import './App.css';
-import MainMenu from './components/MainMenu/MainMenu';
+import MainMenuPage from './components/MainMenuPage/MainMenuPage';
 
 export default class App extends Component {
   constructor(props){
@@ -21,7 +21,7 @@ export default class App extends Component {
     return (
       <ClientContextProvider>
         <SignIn></SignIn>
-        <MainMenu></MainMenu>
+        <MainMenuPage></MainMenuPage>
         
       </ClientContextProvider>
       

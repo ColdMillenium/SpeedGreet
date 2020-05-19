@@ -1,0 +1,28 @@
+.user-header-wrapper{
+    top: 0;
+    right: 0;
+    margin-top: 2em;
+    margin-right:2em;
+    padding-right: 5%;
+    max-width: 50%;
+    position:fixed;
+}
+
+.user-header{
+    position: relative;
+    background: rgba(0, 0, 0, 0.5);
+    color: #f1f1f1;
+    width: 100%;
+    padding: 10px;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+.logo{
+    height: 70px;
+    width: 70px;
+}

@@ -12,8 +12,8 @@ export default function ClientContextProvider(props) {
     const [caller, setCaller] = useState("");
     const [callerSignal, setCallerSignal] = useState();
     const [callAccepted, setCallAccepted] = useState(false);
-    const [hasUserName, setHasUserName] = useState(false);
-    const [userName, setUserName] = useState("user" + Math.floor((Math.random() * 100) + 1));
+    const [hasUserName, setHasUserName] = useState(true);
+    const [userName, setUserName] = useState("userNAME");
     const [userNameRef, setUserNameRef] = useState();
     const [canUpdateName, setCanUpdateName] = useState(false);
 
