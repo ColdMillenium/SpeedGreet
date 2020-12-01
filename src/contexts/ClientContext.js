@@ -12,7 +12,7 @@ export default function ClientContextProvider(props) {
     const [caller, setCaller] = useState("");
     const [callerSignal, setCallerSignal] = useState();
     const [callAccepted, setCallAccepted] = useState(false);
-    const [hasUserName, setHasUserName] = useState(true);
+    const [hasUserName, setHasUserName] = useState(false);
     const [userName, setUserName] = useState("userNAME");
     const [userNameRef, setUserNameRef] = useState();
     const [canUpdateName, setCanUpdateName] = useState(false);
@@ -35,6 +35,10 @@ export default function ClientContextProvider(props) {
         })
         
     },[]);
+
+    function signIn(){
+        
+    }
     function callPeer(partnerID) {
         navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(newStream => {
             setStream(newStream);
@@ -111,7 +115,10 @@ export default function ClientContextProvider(props) {
         acceptCall, 
         confirmUserName,
         userName,
-        hasUserName
+        hasUserName,
+        partnerStream,
+        stream,
+        users,
     }
     return (
         <ClientContext.Provider value ={value}>

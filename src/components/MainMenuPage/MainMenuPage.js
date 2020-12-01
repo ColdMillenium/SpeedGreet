@@ -1,6 +1,6 @@
 import React ,{useContext, createRef, useEffect} from 'react'
 import { ClientContext } from '../../contexts/ClientContext'
-import '../../../node_modules/video-react/dist/video-react'
+
 import './MainMenuPage.css';
 import MainMenuOptions from './MainMenuOptions';
 import UserHeader from './UserHeader';

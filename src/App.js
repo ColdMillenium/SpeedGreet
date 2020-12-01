@@ -3,10 +3,11 @@ import Calculator from './components/Calculator/calculator';
 import Chat from './components/Chat/Chat';
 import SignIn from './components/SignIn/SignIn'
 import Button from '@material-ui/core/Button';
-import ClientContextProvider from './contexts/ClientContext'
 import logo from './logo.svg';
 import './App.css';
 import MainMenuPage from './components/MainMenuPage/MainMenuPage';
+import { Switch, Route } from 'react-router-dom';
+
 
 export default class App extends Component {
   constructor(props){
@@ -19,11 +20,13 @@ export default class App extends Component {
   
   render() {
     return (
-      <ClientContextProvider>
-        <SignIn></SignIn>
-        <MainMenuPage></MainMenuPage>
-        
-      </ClientContextProvider>
+     
+      <Switch>
+          <Route exact path="/" component={SignIn}/>
+          <Route exact path="/SignIn" component={SignIn}/>
+          <Route exact path="/MainMenu" component={MainMenuPage}/>
+      </Switch>
+ 
       
     )
   }

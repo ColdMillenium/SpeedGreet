@@ -21,16 +21,14 @@ export default function SignIn() {
         }
     }
     function display(){
-        if(!hasUserName){
-            return(
-                <div>
-                    <p>Please Sign In:</p>
-                        <TextField inputRef={nameRef} onChange={(e) => updateUserName()} onKeyDown={(e) => textFieldEnter(e)}id="outlined-basic" label="User Name" variant="outlined" />
-                        <Button onClick={() => setFeedBack(confirmUserName(userName))} variant="contained" color="primary">SignIn</Button>
-                    <p>{feedback}</p>
-                </div>
-            )
-        }
+        return(
+            <div>
+                <p>Please Sign In:</p>
+                    <TextField inputRef={nameRef} onChange={(e) => updateUserName()} onKeyDown={(e) => textFieldEnter(e)}id="outlined-basic" label="User Name" variant="outlined" />
+                    <Button onClick={() => setFeedBack(confirmUserName(userName))} variant="contained" color="primary">SignIn</Button>
+                <p>{feedback}</p>
+            </div>
+        )
     }
     
     return (

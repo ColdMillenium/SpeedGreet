@@ -13,17 +13,26 @@ export default function Chat() {
         callAccepted, 
         receivingCall, 
         users, 
-        userName
+        userName,
+        callPeer,
+        acceptCall,
     } = useContext(ClientContext);
+    const userVideoRef = useRef();
+    const partnerVideoRef = useRef();
+
     let UserVideo;
     if (stream != null) {
-    UserVideo = (
-        <video ref={userVideo} autoPlay muted className="local-video" id="local-video"></video>
-    );
+        if(userVideoRef.current != null){
+            userVideoRef.current.srcObject = stream;
+        }
+        UserVideo = (
+            <video ref={userVideo} autoPlay muted className="local-video" id="local-video"></video>
+        );
     }
     
     let PartnerVideo;
     if (callAccepted) {
+        if(partnerVideo.current)
         PartnerVideo = (
             <video ref={partnerVideo}autoPlay className="remote-video" id="remote-video"></video>
         );
