@@ -1,0 +1,16 @@
+
+  .left {
+    max-width: 300px;
+    margin: 0 auto;
+    padding: 20px;
+    float: left;
+    background-color: lightsteelblue;
+    height: 100%;
+
+  }
+ 
+  
+  .right {
+    background-color: red;
+
+  }
