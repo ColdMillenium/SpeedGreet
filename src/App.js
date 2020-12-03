@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, useContext} from 'react';
 import Calculator from './components/Calculator/calculator';
 import Chat from './components/Chat/Chat';
 import SignIn from './components/SignIn/SignIn'
@@ -7,6 +7,7 @@ import logo from './logo.svg';
 import './App.css';
 import MainMenuPage from './components/MainMenuPage/MainMenuPage';
 import { Switch, Route, Redirect } from 'react-router-dom';
+import {ClientContext} from './contexts/ClientContext'
 
 
 export default function App(){
