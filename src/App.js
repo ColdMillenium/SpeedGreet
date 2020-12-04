@@ -34,6 +34,46 @@ export default function App(){
             }
           }} 
           </Route>
+          <Route exact path="/Train">{()=>{
+            if(hasUserName){
+              return<MainMenuPage></MainMenuPage>
+            }else{
+              return <Chat></Chat>
+            }
+          }}
+          </Route>
+          <Route exact path="/Hangout">{()=>{
+            if(hasUserName){
+              return<MainMenuPage></MainMenuPage>
+            }else{
+              return <Chat></Chat>
+            }
+          }}
+          </Route> 
+          <Route exact path="/Date">{()=>{
+            if(hasUserName){
+              return<MainMenuPage></MainMenuPage>
+            }else{
+              return <Chat></Chat>
+            }
+          }}
+          </Route>
+          <Route exact path="/Profile">{()=>{
+            if(hasUserName){
+              return<MainMenuPage></MainMenuPage>
+            }else{
+              return <Chat></Chat>
+            }
+          }}
+          </Route>
+          <Route exact path="/Settings">{()=>{
+            if(hasUserName){
+              return<MainMenuPage></MainMenuPage>
+            }else{
+              return <Chat></Chat>
+            }
+          }}
+          </Route>
       </Switch>
  
       
