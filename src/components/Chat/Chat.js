@@ -1,11 +1,16 @@
-import React, {useEffect, useState, useRef, createRef} from 'react';
+import React, {useEffect, useState, useRef, createRef, useContext} from 'react';
 import io from "socket.io-client";
 import Peer from "simple-peer";
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import './Chat.css'
+import {ClientContext} from '../../contexts/ClientContext'
+
+
 
 export default function Chat() {
+    const {hasUserName, userName} = useContext(ClientContext);
+
     const [yourID, setYourID] = useState("");
     const [users, setUsers] = useState({});
     const [stream, setStream] = useState();
@@ -14,10 +19,9 @@ export default function Chat() {
     const [callerSignal, setCallerSignal] = useState();
     const [callAccepted, setCallAccepted] = useState(false);
     //const [isStreaming, setIsStreaming] = useState(false);
-    const [hasUserName, setHasUserName] = useState(false);
-    const [userName, setUserName] = useState("user" + Math.floor((Math.random() * 100) + 1));
+  
     const [userNameRef, setUserNameRef] = useState();
-    const [canUpdateName, setCanUpdateName] = useState(false);
+    
 
     const userVideo = useRef();
     const partnerVideo = useRef();
@@ -141,63 +145,39 @@ export default function Chat() {
         </div>
         )
     }
-    function updateName(e){
-        if(nameRef.current!=null){
-            nameRef.current.value = nameRef.current.value.split(' ').join('');
-            setUserName(nameRef.current.value);
-            //console.log(nameRef.current.value);
-        }
-    }
-    function signInEnter(e){
-        if(e.keyCode === 13){
-            commitUserName();
-        }
-    }
-    function commitUserName(){
-        if(userName.length > 3){
-            setHasUserName(true);
-            socket.current.emit("yourUserName", userName);
-        }
-    }
+ 
+   
+   
     let pleaseSelectName;
     let videoChat;
     let activeUsers;
-    if(!hasUserName){
-        pleaseSelectName = (
-            <div>
-                <p>Please Sign In:</p>
-                <TextField inputRef={nameRef} onChange={(e) => updateName()} onKeyDown={(e) => signInEnter(e)}id="outlined-basic" label="User Name" variant="outlined" />
-                <Button onClick={() => commitUserName()} variant="contained" color="primary">SignIn</Button>
    
+    videoChat = (
+        <div>
+            <h2 className="talk-info" id="talking-with-info"> 
+                {userName}: Select active user on the left menu.
+                {incomingCall}
+            </h2>
+            <div className="video-container">
+                {PartnerVideo}
+                {UserVideo}
             </div>
-        )
-    }else{
-        videoChat = (
-            <div>
-                <h2 className="talk-info" id="talking-with-info"> 
-                    {userName}: Select active user on the left menu.
-                    {incomingCall}
-                </h2>
-                <div className="video-container">
-                    {PartnerVideo}
-                    {UserVideo}
-                </div>
-            </div>
-        );
-        activeUsers = (
-            <div>
-                {Object.keys(users).map(key => {
-                    if (key === yourID) {
-                        return null;
-                    }
-                    return (
+        </div>
+    );
+    activeUsers = (
+        <div>
+            {Object.keys(users).map(key => {
+                if (key === yourID) {
+                    return null;
+                }
+                return (
 
-                        <button key={key} className="user" onClick={() => callPeer(key)}>Call {users[key]}</button>
-                    );
-                })}
-            </div>
-        )
-    }
+                    <button key={key} className="user" onClick={() => callPeer(key)}>Call {users[key]}</button>
+                );
+            })}
+        </div>
+    )
+    
     
     return (
             <div>
