@@ -32,11 +32,19 @@ export default function Chat() {
     useEffect(()=>{
         socket.current = io.connect("/");
         socket.current.on("yourID", (id) => {
+            console.log("setting my id:" + id);
             setYourID(id);
             
         })
         socket.current.on("allUsers", (users) => {
-            setUsers(users);
+            //filters out your id from the list of users
+            
+            setUsers(Object.entries(users).filter(([id,v])=>{
+                console.log(users);
+                console.log("Your ID: " + yourID)
+                return id != yourID
+                
+            }));
         })
         socket.current.on("hey", (data) => {
             setReceivingCall(true);
