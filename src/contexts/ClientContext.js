@@ -21,6 +21,7 @@ export default function ClientContextProvider(props) {
     useEffect(()=>{
         socket.current = io.connect("/");
         socket.current.on("yourID", (id) => {
+            console.log("my id is : " + id)
             setYourID(id);
             
         })
@@ -36,67 +37,22 @@ export default function ClientContextProvider(props) {
         
     },[]);
 
-    function signIn(){
-        
+    function callUser(data){
+        //the data contains and id, which to whom the call is for
+        // the data contains a id , which who the call is from.
+        //the data send contains signalData, which tells other users how to contact them back using the peer.
+        socket.current.emit("callUser", data);
     }
-    function callPeer(partnerID) {
-        navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(newStream => {
-            setStream(newStream);
-            //console.log("calling someone bruh");
-            const peer = new Peer({
-                initiator: true,
-                trickle: false,
-                stream: newStream,
-            });
-            
-            peer.on("signal", data => {
-                socket.current.emit("callUser", { userToCall: partnerID, signalData: data, from: yourID })
-            })
-        
-            peer.on("stream", partnerStream => {
-                setPartnerStream(partnerStream);
-            });
-        
-            socket.current.on("callAccepted", signal => {
-                setCallAccepted(true);
-                peer.signal(signal);
-            })
-        }).catch(function(error) {
-            if (error.name === 'PermissionDeniedError') {
-              console.log('Permissions have not been granted to use your camera and ' +
-                'microphone, you need to allow the page access to your devices in ' +
-                'order for the demo to work.');
-            }
-            console.log('getUserMedia error: ' + error.name);
-          });
+    function onPartnerAcceptsCall(peer){
+        socket.current.on("callAccepted", signal => {
+            setCallAccepted(true);
+            peer.signal(signal);
+        })
     }
     
-    function acceptCall() {
-        navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(newStream => {
-            setStream(newStream);
-            setCallAccepted(true);
-            console.log('accepted call bruh');
-            const peer = new Peer({
-                initiator: false,
-                trickle: false,
-                stream: newStream,
-            });
-            peer.on("signal", data => {
-                socket.current.emit("acceptCall", { signal: data, to: caller })
-            })
-            peer.on("stream", partnerStream => {
-                setPartnerStream(partnerStream);              
-            });
-        
-            peer.signal(callerSignal);
-        }).catch(function(error) {
-            if (error.name === 'PermissionDeniedError') {
-              console.log('Permissions have not been granted to use your camera and ' +
-                'microphone, you need to allow the page access to your devices in ' +
-                'order for the demo to work.');
-            }
-            console.log('getUserMedia error: ' + error.name);
-          });
+
+    function notifyAcceptCall(data){
+        socket.current.emit("acceptCall", data)
     }
     function confirmUserName(name){
         if(name.length < 3){
@@ -111,14 +67,21 @@ export default function ClientContextProvider(props) {
         return null;
     }
     const value = {
-        callPeer, 
-        acceptCall, 
         confirmUserName,
         userName,
         hasUserName,
         partnerStream,
         stream,
         users,
+        yourID,
+        receivingCall,
+        callUser,
+        onPartnerAcceptsCall,
+        notifyAcceptCall,
+        callerSignal,
+        caller,
+        callAccepted,
+        setCallAccepted,
     }
     return (
         <ClientContext.Provider value ={value}>

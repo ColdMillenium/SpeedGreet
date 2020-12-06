@@ -9,17 +9,24 @@ import {ClientContext} from '../../contexts/ClientContext'
 
 
 export default function Chat() {
-    const {hasUserName, userName} = useContext(ClientContext);
+    const {
+        hasUserName,
+        userName, 
+        yourID, 
+        users,
+        receivingCall,
+        callUser,
+        onPartnerAcceptsCall,
+        notifyAcceptCall,
+        callerSignal,
+        caller,
+        callAccepted,
+        setCallAccepted,
+    } = useContext(ClientContext);
 
-    const [yourID, setYourID] = useState("");
-    const [users, setUsers] = useState({});
-    const [stream, setStream] = useState();
-    const [receivingCall, setReceivingCall] = useState(false);
-    const [caller, setCaller] = useState("");
-    const [callerSignal, setCallerSignal] = useState();
-    const [callAccepted, setCallAccepted] = useState(false);
-    //const [isStreaming, setIsStreaming] = useState(false);
   
+    
+    const [stream, setStream] = useState();
     const [userNameRef, setUserNameRef] = useState();
     
 
@@ -29,60 +36,36 @@ export default function Chat() {
     const nameRef = createRef();
     
     
-    useEffect(()=>{
-        socket.current = io.connect("/");
-        socket.current.on("yourID", (id) => {
-            console.log("setting my id:" + id);
-            setYourID(id);
-            
-        })
-        socket.current.on("allUsers", (users) => {
-            //filters out your id from the list of users
-            
-            setUsers(Object.entries(users).filter(([id,v])=>{
-                console.log(users);
-                console.log("Your ID: " + yourID)
-                return id != yourID
-                
-            }));
-        })
-        socket.current.on("hey", (data) => {
-            setReceivingCall(true);
-            setCaller(data.from);
-            setCallerSignal(data.signal);
-            //console.log("receiving call dawg");
-        })
-        
-    },[]);
-    function callPeer(id) {
+   
+    function callPeer(partnerId) {
         navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(newStream => {
             setStream(newStream);
             if (userVideo.current) {
               userVideo.current.srcObject = newStream;
             }
-            //console.log("calling someone bruh");
+
+            //Since you are the initiator. the Signal will start from you, not from the parter.
             const peer = new Peer({
                 initiator: true,
                 trickle: false,
                 stream: newStream,
             });
             
+            //If peer is the initiator (in this case it is), it emit a "signal"
             peer.on("signal", data => {
-                //console.log(id);
-                socket.current.emit("callUser", { userToCall: id, signalData: data, from: yourID })
+               //you're going to send over data and invite the other partner to call
+               callUser({ userToCall: partnerId, signalData: data, from: yourID })
             })
-        
+            
+            //when your partner is streaming, sets the video for the stream
             peer.on("stream", PartnerStream => {
                 if (partnerVideo.current) {
                     partnerVideo.current.srcObject = PartnerStream;
-                    //console.log("got receipient's stream!");
                 }
             });
-        
-            socket.current.on("callAccepted", signal => {
-                setCallAccepted(true);
-                peer.signal(signal);
-            })
+
+            //When the partner accepts the call we need our peer to save the signal data.
+            onPartnerAcceptsCall(peer);
         }).catch(function(error) {
             if (error.name === 'PermissionDeniedError') {
               console.log('Permissions have not been granted to use your camera and ' +
@@ -108,7 +91,7 @@ export default function Chat() {
                 stream: newStream,
             });
             peer.on("signal", data => {
-                socket.current.emit("acceptCall", { signal: data, to: caller })
+                notifyAcceptCall({ signal: data, to: caller });
             })
             peer.on("stream", partnerStream => {
                 console.log(partnerStream);
@@ -185,7 +168,6 @@ export default function Chat() {
             })}
         </div>
     )
-    
     
     return (
             <div>
