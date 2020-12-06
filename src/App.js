@@ -8,14 +8,25 @@ import './App.css';
 import MainMenuPage from './components/MainMenuPage/MainMenuPage';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import {ClientContext} from './contexts/ClientContext'
+import { createMuiTheme, makeStyles, ThemeProvider, withTheme } from '@material-ui/core/styles';
 
+const theme = createMuiTheme({
+  colors: {
+    light: 'white',
+    mid: '#47ffa0',
+    dark: '#141517',
+    highlight: "#47ffa0",
+  },
+});
 
 export default function App(){
+ 
+
   const {confirmUserName, hasUserName} = useContext(ClientContext);
   
 
     return (
-     
+     <ThemeProvider theme={theme}>
       <Switch>
           <Route exact path="/">{ ()=>{
             if(hasUserName){
@@ -75,7 +86,7 @@ export default function App(){
           }}
           </Route>
       </Switch>
- 
+    </ThemeProvider>
       
     );
   
