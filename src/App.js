@@ -13,9 +13,9 @@ import { createMuiTheme, makeStyles, ThemeProvider, withTheme } from '@material-
 const theme = createMuiTheme({
   colors: {
     light: 'white',
-    mid: '#47ffa0',
-    dark: '#141517',
-    highlight: "#47ffa0",
+    mid: '#a9abb3',
+    dark: '#272c34',
+    accent: "#a6e22e",
   },
 });
 
