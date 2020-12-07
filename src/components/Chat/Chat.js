@@ -3,7 +3,7 @@ import io from "socket.io-client";
 import Peer from "simple-peer";
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
-import {styles, makeStyles, useTheme} from '@material-ui/core/styles'
+import { makeStyles, useTheme} from '@material-ui/core/styles'
 import './Chat.css'
 import {ClientContext} from '../../contexts/ClientContext'
 
