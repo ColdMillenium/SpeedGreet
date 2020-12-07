@@ -3,17 +3,17 @@ import { ClientContext } from '../../contexts/ClientContext'
 import { Button, TextField } from '@material-ui/core'
 import { makeStyles, useTheme} from '@material-ui/core/styles';
 import { ThemeConsumer } from 'styled-components';
-
+import Typography from "@material-ui/core/Typography";
 
 
 
 export default function SignIn() {
     const theme = useTheme();
     const useStyles = makeStyles({
-        hangout: {
-          background: theme.colors.dark,
-          color:theme.colors.light,
+        signIn: {
+          padding: 20,
         },
+        
       });
     
     const classes = useStyles();
@@ -36,10 +36,11 @@ export default function SignIn() {
     function display(){
         return(
             <div>
-                <p >Please Sign In:</p>
+                <Typography variant="h4">Please Sign In:</Typography>
                     <TextField inputRef={nameRef} onChange={(e) => updateUserName()} onKeyDown={(e) => textFieldEnter(e)}id="outlined-basic" label="User Name" variant="outlined" />
+                    <br/>
                     <Button onClick={() => setFeedBack(confirmUserName(userName))} variant="contained" color="primary">SignIn</Button>
-                <p>{feedback}</p>
+                    <Typography variant="p">{feedback}</Typography>
             </div>
         )
     }
