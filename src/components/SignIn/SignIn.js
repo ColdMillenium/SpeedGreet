@@ -1,13 +1,22 @@
 import React, {createRef, useState, useContext}from 'react'
 import { ClientContext } from '../../contexts/ClientContext'
 import { Button, TextField } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme} from '@material-ui/core/styles';
 import { ThemeConsumer } from 'styled-components';
 
 
 
-export default function SignIn() {
 
+export default function SignIn() {
+    const theme = useTheme();
+    const useStyles = makeStyles({
+        hangout: {
+          background: theme.colors.dark,
+          color:theme.colors.light,
+        },
+      });
+    
+    const classes = useStyles();
     const nameRef = createRef();
     const [userName, setUserName] = useState("");
     const [feedback, setFeedBack] = useState();
