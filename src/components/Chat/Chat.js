@@ -7,6 +7,8 @@ import { makeStyles, useTheme} from '@material-ui/core/styles'
 import './Chat.css'
 import {ClientContext} from '../../contexts/ClientContext'
 import Header from '../Header/Header'
+import OnlineUsers from './OnlineUsers';
+import Typography from "@material-ui/core/Typography";
 
 
 
@@ -185,14 +187,11 @@ export default function Chat() {
                 <div className={classes.hangout}>
                     <Header></Header>
                     <div className="content-container">
-                    <div className="active-users-panel" id="active-user-container">
-                        <h3 className="panel-title">Active Users:</h3>
-                        {activeUsers}
-                    </div>
-                    <div className="video-chat-container">
-                        {pleaseSelectName}
-                        {videoChat}
-                    </div>
+                        <OnlineUsers callPeer={callPeer}></OnlineUsers>
+                        <div className="video-chat-container">
+                            {pleaseSelectName}
+                            {videoChat}
+                        </div>
                     </div>
                 </div>
             </div>
