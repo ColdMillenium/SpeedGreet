@@ -1,6 +1,7 @@
 import React, {createContext, useState, useRef, useEffect} from 'react'
 import io from "socket.io-client";
 import Peer from "simple-peer";
+import { keyframes } from 'styled-components';
 
 export const ClientContext = createContext();
 export default function ClientContextProvider(props) {
@@ -16,6 +17,7 @@ export default function ClientContextProvider(props) {
     const [userName, setUserName] = useState("userNAME");
     const [userNameRef, setUserNameRef] = useState();
     const [canUpdateName, setCanUpdateName] = useState(false);
+    const [signInError, setSignInError] = useState("");
 
     const socket = useRef();
     useEffect(()=>{
@@ -33,6 +35,13 @@ export default function ClientContextProvider(props) {
             setCaller(data.from);
             setCallerSignal(data.signal);
             //console.log("receiving call dawg");
+        })
+        socket.current.on("signInError", error =>{
+            setSignInError(error);
+        })
+        socket.current.on("validUserName", name =>{
+            setUserName(name);
+            setHasUserName(true);
         })
         
     },[]);
@@ -54,20 +63,21 @@ export default function ClientContextProvider(props) {
     function notifyAcceptCall(data){
         socket.current.emit("acceptCall", data)
     }
-    function confirmUserName(name){
+    function validateUserName(name){
         if(name.length < 3){
-            return("NAME_TOO_SHORT");
+            setSignInError("userNameTooShort");
         }
         if(users[name]){
-            return("NAME_ALREADY_EXISTS");
+            for(let key in users){
+                if(users[key] === name){
+                    setSignInError("userNameTaken");
+                }
+            }
         }
-        setUserName(name);
-        setHasUserName(true);
         socket.current.emit("yourUserName", name);
-        return null;
     }
     const value = {
-        confirmUserName,
+        validateUserName,
         userName,
         hasUserName,
         partnerStream,
@@ -82,6 +92,7 @@ export default function ClientContextProvider(props) {
         caller,
         callAccepted,
         setCallAccepted,
+        signInError
     }
     return (
         <ClientContext.Provider value ={value}>

@@ -22,12 +22,11 @@ export default function SignIn() {
     const classes = useStyles();
     const nameRef = createRef();
     const [userName, setUserName] = useState("");
-    const [feedback, setFeedBack] = useState();
-    const {confirmUserName, hasUserName} = useContext(ClientContext);
+    const {validateUserName, signInError} = useContext(ClientContext);
     
     function textFieldEnter(e){
         if(e.keyCode === 13){
-            setFeedBack(confirmUserName(userName));
+            validateUserName(userName);
         }
     }
     function updateUserName(e){
@@ -43,8 +42,8 @@ export default function SignIn() {
                     {/* okay apparently you have to put input in like this... */}
                     <TextField inputProps={{className: classes.input}} inputRef={nameRef} onChange={(e) => updateUserName()} onKeyDown={(e) => textFieldEnter(e)}id="outlined-basic" label="User Name" variant="outlined" />
                     <br/>
-                    <Button onClick={() => setFeedBack(confirmUserName(userName))} variant="contained" color="primary">SignIn</Button>
-                    <Typography variant="p">{feedback}</Typography>
+                    <Button onClick={() => validateUserName(userName)} variant="contained" color="primary">SignIn</Button>
+                    <Typography variant="h1">{signInError}</Typography>
             </div>
         )
     }
