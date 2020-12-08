@@ -168,26 +168,13 @@ export default function Chat() {
             </div>
         </div>
     );
-    activeUsers = (
-        <div>
-            {Object.keys(users).map(key => {
-                if (key === yourID) {
-                    return null;
-                }
-                return (
-
-                    <button key={key} className="user" onClick={() => callPeer(key)}>Call {users[key]}</button>
-                );
-            })}
-        </div>
-    )
     
     return (
             <div>
                 <div className={classes.hangout}>
                     <Header></Header>
                     <div className="content-container">
-                        <OnlineUsers callPeer={callPeer}></OnlineUsers>
+                        <OnlineUsers users={users} handleClick={callPeer}></OnlineUsers>
                         <div className="video-chat-container">
                             {pleaseSelectName}
                             {videoChat}
