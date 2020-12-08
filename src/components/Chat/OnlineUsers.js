@@ -6,46 +6,71 @@ import Grid from '@material-ui/core/Grid';
 import User from './User';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import Drawer from '@material-ui/core/Drawer';
+import Toolbar from '@material-ui/core/Toolbar';
 
+const drawerWidth = 240;
 
+const useStyles = makeStyles((theme) =>({
+    drawerContainer: {
+        overflow: 'auto',
+        color: theme.colors.light,
+        
+    },
+    title:{
+        margin: '10 0 0 0',
+        paddingLeft: 30,
+        borderBottom: '1px solid #cddfe7',
+        paddingBottom: 10,
+    },
+    drawer: {//drawer
+        width: drawerWidth,
+        flexShrink: 0,
+    },
+    drawerPaper: {//what's inside the drawer
+        width: drawerWidth,
+        backgroundColor: theme.colors.dark,
+        borderRight: "1px solid " + theme.colors.mid,
+    },
+  }));
 export default function OnlineUsers(props) {
     const theme = useTheme();
-    const useStyles = makeStyles({
-        activeUsersPanel: {
-            width: 300,
-            height: '100%',
-            borderRight: "1px solid #cddfe7"
-        },
-        title:{
-            margin: '10 0 0 0',
-            paddingLeft: 30,
-            borderBottom: '1px solid #cddfe7',
-            paddingBottom: 10
-        }
-      });
+   
     const { yourID } = useContext(ClientContext);
     const handleClick = props.handleClick;
     const users = props.users;
     const classes = useStyles();
 
     return (
-        <div className={classes.activeUsersPanel} id="active-user-container">
-            <div className="panel-title">
-                <Typography variant='h5'>Active Users</Typography>
+        <Drawer
+            className={classes.drawer}
+            variant="permanent"
+            classes={{
+            paper: classes.drawerPaper,
+            }}
+        >
+            {/* this toolbar on it's own makes space for one "line" */}
+            {/* Thisi s necessary because otherwise the header would cover it. */}
+            <Toolbar/> 
+            <Toolbar/>
+            <div className={classes.drawerContainer} id="active-user-container">
+                <div className={classes.title}>
+                    <Typography variant='h5'>Active Users</Typography>
+                </div>
+                <List container direction="column" alignItems="stretch">
+                    {Object.keys(users).map(key => {
+                        if (key === yourID) {
+                            return null;
+                        }
+                        return (
+                            <ListItem button  key={key}  onClick={() => handleClick(key)}>
+                                <User name={users[key]}  className="user" ></User>
+                            </ListItem>
+                        );
+                    })}
+                </List>
             </div>
-            <List container direction="column" alignItems="stretch">
-                {Object.keys(users).map(key => {
-                    if (key === yourID) {
-                        return null;
-                    }
-                    return (
-                        <ListItem button  key={key}  onClick={() => handleClick(key)}>
-                            <User name={users[key]}  className="user" ></User>
-                        </ListItem>
-                    );
-                })}
-            </List>
-        </div>
+        </Drawer>
     )
 
     
