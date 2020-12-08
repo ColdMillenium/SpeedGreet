@@ -9,18 +9,75 @@ import {ClientContext} from '../../contexts/ClientContext'
 import Header from '../Header/Header'
 import OnlineUsers from './OnlineUsers';
 import Typography from "@material-ui/core/Typography";
+import Toolbar from '@material-ui/core/Toolbar';
 
 
-
+const useStyles = makeStyles((theme)=>({
+    hangout: {
+      background: theme.colors.dark,
+      color:theme.colors.light,
+    },
+    videoChatContainer: {
+        padding: 0,
+        flex: 1,
+        postion: "relative"
+    },
+    talkInfo:{
+        
+    },
+    remoteVideo:{
+        width: "100%",
+        height: "100%",
+        margin: 0,
+        madding:0,
+    },
+    localVideo:{
+        position: "absolute",
+        border: "1px solid " + theme.colors.accent,
+        bottom: 0,
+        right: 0,
+        borderRadius: 5,
+        width: 300,
+        boxShadow: "0 3 6 rgba(0, 0, 0, 0.2)"
+    },
+    contentContainer: {
+        width: '100%',
+        height: "calc(100vh - 89px)",
+        display: "flex",
+        justifyContent: "space-between",
+        overflow: "hidden",
+      }
+  }));
 export default function Chat() {
     const theme = useTheme();
-    const useStyles = makeStyles({
-        hangout: {
-          background: theme.colors.dark,
-          color:theme.colors.light,
-        },
-      });
     
+    //   .video-chat-container {
+    //     padding: 0 20px;
+    //     flex: 1;
+    //     position: relative;
+    //   }
+      
+    //   .talk-info {
+    //     font-weight: 500;
+    //     font-size: 21px;
+    //   }
+      
+    //   .remote-video {
+    //     border: 1px solid #cddfe7;
+    //     width: 100%;
+    //     height: 100%;
+    //     box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+    //   }
+      
+    //   .local-video {
+    //     position: absolute;
+    //     border: 1px solid #cddfe7;
+    //     bottom: 60px;
+    //     right: 40px;
+    //     box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+    //     border-radius: 5px;
+    //     width: 300px;
+    //   }
     const classes = useStyles();
     const {
         hasUserName,
@@ -129,14 +186,14 @@ export default function Chat() {
     let UserVideo;
     if (stream != null) {
     UserVideo = (
-        <video ref={userVideo} autoPlay muted className="local-video" id="local-video"></video>
+        <video ref={userVideo} autoPlay muted className={classes.localVideo} id="local-video"></video>
     );
     }
     
     let PartnerVideo;
     if (callAccepted) {
         PartnerVideo = (
-            <video ref={partnerVideo}autoPlay className="remote-video" id="remote-video"></video>
+            <video ref={partnerVideo}autoPlay className={classes.remoteVideo} id="remote-video"></video>
         );
     }
     
@@ -149,35 +206,34 @@ export default function Chat() {
         </div>
         )
     }
- 
-   
-   
-    let pleaseSelectName;
-    let videoChat;
-    let activeUsers;
-   
-    videoChat = (
-        <div>
-            <h2 className="talk-info" id="talking-with-info"> 
-                {userName}: Select active user on the left menu.
-                {incomingCall}
-            </h2>
-            <div className="video-container">
-                {PartnerVideo}
-                {UserVideo}
-            </div>
-        </div>
-    );
-    
+    let notification = () =>{
+        console.log("wtf dude "+ callAccepted);
+        if(!callAccepted){
+            return (
+                <div>
+                    <Toolbar/>
+                    <Toolbar/>
+                    <Typography variant="h5" className={classes.talkInfo} > 
+                        Welcome {userName}!
+                    </Typography>
+                    <Typography variant="h6" className={classes.talkInfo} > 
+                        {incomingCall}
+                    </Typography>
+                </div>
+            )
+        }
+    }
     return (
             <div>
                 <div className={classes.hangout}>
                     <Header></Header>
-                    <div className="content-container">
+                    <div className={classes.contentContainer}>
                         <OnlineUsers users={users} callPeer={callPeer}></OnlineUsers>
-                        <div className="video-chat-container">
-                            {pleaseSelectName}
-                            {videoChat}
+                        {notification()}
+                        <div className={classes.videoChatContainer}>
+                            
+                            {PartnerVideo}
+                            {UserVideo}
                         </div>
                     </div>
                 </div>
