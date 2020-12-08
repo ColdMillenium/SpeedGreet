@@ -174,7 +174,7 @@ export default function Chat() {
                 <div className={classes.hangout}>
                     <Header></Header>
                     <div className="content-container">
-                        <OnlineUsers users={users} handleClick={callPeer}></OnlineUsers>
+                        <OnlineUsers users={users} callPeer={callPeer}></OnlineUsers>
                         <div className="video-chat-container">
                             {pleaseSelectName}
                             {videoChat}
