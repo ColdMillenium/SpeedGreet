@@ -2,12 +2,11 @@ import React ,{useContext} from 'react'
 import { makeStyles, useTheme} from '@material-ui/core/styles'
 import Typography from "@material-ui/core/Typography";
 import {ClientContext} from '../../contexts/ClientContext'
-import Grid from '@material-ui/core/Grid';
 import User from './User';
 import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
 import Drawer from '@material-ui/core/Drawer';
 import Toolbar from '@material-ui/core/Toolbar';
+
 
 const drawerWidth = 240;
 
@@ -15,7 +14,6 @@ const useStyles = makeStyles((theme) =>({
     drawerContainer: {
         overflow: 'auto',
         color: theme.colors.light,
-        
     },
     title:{
         margin: '10 0 0 0',
@@ -37,7 +35,7 @@ export default function OnlineUsers(props) {
     const theme = useTheme();
    
     const { yourID } = useContext(ClientContext);
-    const handleClick = props.handleClick;
+    const callPeer = props.callPeer;
     const users = props.users;
     const classes = useStyles();
 
@@ -59,13 +57,16 @@ export default function OnlineUsers(props) {
                 </div>
                 <List container direction="column" alignItems="stretch">
                     {Object.keys(users).map(key => {
+                        
                         if (key === yourID) {
                             return null;
                         }
                         return (
-                            <ListItem button  key={key}  onClick={() => handleClick(key)}>
-                                <User name={users[key]}  className="user" ></User>
-                            </ListItem>
+                            <div key={key}>
+                                <User name={users[key]}  callPeer={() => callPeer(key)} className="user" ></User>
+                            </div>
+                           
+                            
                         );
                     })}
                 </List>
