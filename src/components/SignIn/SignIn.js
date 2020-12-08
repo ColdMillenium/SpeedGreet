@@ -9,12 +9,15 @@ import Typography from "@material-ui/core/Typography";
 
 export default function SignIn() {
     const theme = useTheme();
-    const useStyles = makeStyles({
+    const useStyles = makeStyles((theme)=>({
         signIn: {
           padding: 20,
         },
+        input:{
+            color: theme.colors.light
+        }
         
-      });
+    }));
     
     const classes = useStyles();
     const nameRef = createRef();
@@ -37,7 +40,8 @@ export default function SignIn() {
         return(
             <div>
                 <Typography variant="h4">Please Sign In:</Typography>
-                    <TextField inputRef={nameRef} onChange={(e) => updateUserName()} onKeyDown={(e) => textFieldEnter(e)}id="outlined-basic" label="User Name" variant="outlined" />
+                    {/* okay apparently you have to put input in like this... */}
+                    <TextField inputProps={{className: classes.input}} inputRef={nameRef} onChange={(e) => updateUserName()} onKeyDown={(e) => textFieldEnter(e)}id="outlined-basic" label="User Name" variant="outlined" />
                     <br/>
                     <Button onClick={() => setFeedBack(confirmUserName(userName))} variant="contained" color="primary">SignIn</Button>
                     <Typography variant="p">{feedback}</Typography>
