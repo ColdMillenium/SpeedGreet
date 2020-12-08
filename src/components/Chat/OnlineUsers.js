@@ -2,6 +2,9 @@ import React ,{useContext} from 'react'
 import { makeStyles, useTheme} from '@material-ui/core/styles'
 import Typography from "@material-ui/core/Typography";
 import {ClientContext} from '../../contexts/ClientContext'
+import Grid from '@material-ui/core/Grid';
+import User from './User';
+
 
 export default function OnlineUsers(props) {
     const theme = useTheme();
@@ -18,24 +21,28 @@ export default function OnlineUsers(props) {
             paddingBottom: 10
         }
       });
-    const { users, yourID } = useContext(ClientContext);
-    const callPeer = props;
+    const { yourID } = useContext(ClientContext);
+    const handleClick = props.handleClick;
+    const users = props.users;
+    const classes = useStyles();
 
     return (
-        <div className="active-users-panel" id="active-user-container">
-        <div className="panel-title">
-            <Typography variant='h5'>Active Users</Typography>
-        </div>
-            <div>
+        <div className={classes.activeUsersPanel} id="active-user-container">
+            <div className="panel-title">
+                <Typography variant='h5'>Active Users</Typography>
+            </div>
+            <Grid container direction="column" alignItems="stretch">
                 {Object.keys(users).map(key => {
                     if (key === yourID) {
                         return null;
                     }
                     return (
-                        <button key={key} className="user" onClick={() => callPeer(key)}>Call {users[key]}</button>
+                        <Grid item  key={key}  onClick={() => handleClick(key)}>
+                            <User name={users[key]}  className="user" ></User>
+                        </Grid>
                     );
                 })}
-            </div>
+            </Grid>
         </div>
     )
 
