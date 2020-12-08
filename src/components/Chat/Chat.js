@@ -50,150 +50,43 @@ const useStyles = makeStyles((theme)=>({
   }));
 export default function Chat() {
     const theme = useTheme();
-    
-    //   .video-chat-container {
-    //     padding: 0 20px;
-    //     flex: 1;
-    //     position: relative;
-    //   }
-      
-    //   .talk-info {
-    //     font-weight: 500;
-    //     font-size: 21px;
-    //   }
-      
-    //   .remote-video {
-    //     border: 1px solid #cddfe7;
-    //     width: 100%;
-    //     height: 100%;
-    //     box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
-    //   }
-      
-    //   .local-video {
-    //     position: absolute;
-    //     border: 1px solid #cddfe7;
-    //     bottom: 60px;
-    //     right: 40px;
-    //     box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
-    //     border-radius: 5px;
-    //     width: 300px;
-    //   }
     const classes = useStyles();
     const {
-        hasUserName,
         userName, 
-        yourID, 
         users,
         receivingCall,
-        callUser,
-        onPartnerAcceptsCall,
-        notifyAcceptCall,
-        callerSignal,
         caller,
         callAccepted,
-        setCallAccepted,
+        callPeer,
+        acceptCall,
+        userStream,
+        partnerStream,
     } = useContext(ClientContext);
 
-  
-    
-    const [stream, setStream] = useState();
-    const [userNameRef, setUserNameRef] = useState();
-    
+    const userVideoRef = useRef();
+    const partnerVideoRef = useRef();
 
-    const userVideo = useRef();
-    const partnerVideo = useRef();
-    const socket = useRef();
-    const nameRef = createRef();
     
-    
-   
-    function callPeer(partnerId) {
-        navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(newStream => {
-            setStream(newStream);
-            if (userVideo.current) {
-              userVideo.current.srcObject = newStream;
-            }
-
-            //Since you are the initiator. the Signal will start from you, not from the parter.
-            const peer = new Peer({
-                initiator: true,
-                trickle: false,
-                stream: newStream,
-            });
-            
-            //If peer is the initiator (in this case it is), it emit a "signal"
-            peer.on("signal", data => {
-               //you're going to send over data and invite the other partner to call
-               callUser({ userToCall: partnerId, signalData: data, from: yourID })
-            })
-            
-            //when your partner is streaming, sets the video for the stream
-            peer.on("stream", PartnerStream => {
-                if (partnerVideo.current) {
-                    partnerVideo.current.srcObject = PartnerStream;
-                }
-            });
-
-            //When the partner accepts the call we need our peer to save the signal data.
-            onPartnerAcceptsCall(peer);
-        }).catch(function(error) {
-            if (error.name === 'PermissionDeniedError') {
-              console.log('Permissions have not been granted to use your camera and ' +
-                'microphone, you need to allow the page access to your devices in ' +
-                'order for the demo to work.');
-            }
-            console.log('getUserMedia error: ' + error.name);
-          });
+    let userVideoWindow;
+    if ( callAccepted ) {
+        if(userVideoRef.current){
+            userVideoRef.current.srcObject = userStream;
+        }
+        console.log("userVieoRef" + userVideoRef);
+        userVideoWindow = (
+            <video ref={userVideoRef} autoPlay muted className={classes.localVideo} id="local-video"></video>
+        );
     }
     
-    function acceptCall() {
-       
-        navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(newStream => {
-            setStream(newStream);
-            setCallAccepted(true);
-            if (userVideo.current) {
-              userVideo.current.srcObject = newStream;
-            }
-            console.log('accepted call bruh');
-            const peer = new Peer({
-                initiator: false,
-                trickle: false,
-                stream: newStream,
-            });
-            peer.on("signal", data => {
-                notifyAcceptCall({ signal: data, to: caller });
-            })
-            peer.on("stream", partnerStream => {
-                console.log(partnerStream);
-                partnerVideo.current.srcObject = partnerStream;
-                console.log("got caller's stream!");
-                
-            });
-        
-            peer.signal(callerSignal);
-        }).catch(function(error) {
-            if (error.name === 'PermissionDeniedError') {
-              console.log('Permissions have not been granted to use your camera and ' +
-                'microphone, you need to allow the page access to your devices in ' +
-                'order for the demo to work.');
-            }
-            console.log('getUserMedia error: ' + error.name);
-          });
-    }
-
-    
-
-    let UserVideo;
-    if (stream != null) {
-    UserVideo = (
-        <video ref={userVideo} autoPlay muted className={classes.localVideo} id="local-video"></video>
-    );
-    }
-    
-    let PartnerVideo;
-    if (callAccepted) {
-        PartnerVideo = (
-            <video ref={partnerVideo}autoPlay className={classes.remoteVideo} id="remote-video"></video>
+    let partnerVideoWindow;
+    if (callAccepted ) {
+        if(partnerVideoRef.current){
+            console.log("partner REF IS HERE!")
+            partnerVideoRef.current.srcObject = partnerStream;
+        } 
+        console.log("showing partner stream");
+        partnerVideoWindow = (
+            <video ref={partnerVideoRef} autoPlay className={classes.remoteVideo} id="remote-video"></video>
         );
     }
     
@@ -202,7 +95,7 @@ export default function Chat() {
         incomingCall = (
         <div>
             <h1>{users[caller]}:{caller} is calling you</h1>
-            <button onClick={() => acceptCall()}>Accept</button>
+            <button onClick={acceptCall}>Accept</button>
         </div>
         )
     }
@@ -232,8 +125,8 @@ export default function Chat() {
                         {notification()}
                         <div className={classes.videoChatContainer}>
                             
-                            {PartnerVideo}
-                            {UserVideo}
+                            {partnerVideoWindow}
+                            {userVideoWindow}
                         </div>
                     </div>
                 </div>

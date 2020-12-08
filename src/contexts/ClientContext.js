@@ -7,8 +7,8 @@ export const ClientContext = createContext();
 export default function ClientContextProvider(props) {
     const [yourID, setYourID] = useState("");
     const [users, setUsers] = useState({});
-    const [stream, setStream] = useState();
-    const [partnerStream, setPartnerStream] = useState();
+    const [userStream, setUserStream] = useState(null);
+    const [partnerStream, setPartnerStream] = useState(null);
     const [receivingCall, setReceivingCall] = useState(false);
     const [caller, setCaller] = useState("");
     const [callerSignal, setCallerSignal] = useState();
@@ -66,22 +66,93 @@ export default function ClientContextProvider(props) {
     function validateUserName(name){
         if(name.length < 3){
             setSignInError("userNameTooShort");
+            return;
         }
         if(users[name]){
             for(let key in users){
                 if(users[key] === name){
                     setSignInError("userNameTaken");
+                    return;
                 }
             }
         }
         socket.current.emit("yourUserName", name);
+    }
+    function callPeer(partnerId) {
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(newStream => {
+            setUserStream(newStream);
+            
+            //Since you are the initiator. the Signal will start from you, not from the parter.
+            const peer = new Peer({
+                initiator: true,
+                trickle: false,
+                stream: newStream,
+            });
+            
+            //If peer is the initiator (in this case it is), it emit a "signal"
+            peer.on("signal", data => {
+               //you're going to send over data and invite the other partner to call
+               callUser({ userToCall: partnerId, signalData: data, from: yourID })
+            })
+            
+            //when your partner is streaming, sets the video for the stream
+            peer.on("stream", x => {
+            // setPartnerStream(PartnerStream);
+                console.log("Caller: getting partner's stream")
+                setPartnerStream(x);
+            });
+
+            //When the partner accepts t    he call we need our peer to save the signal data.
+            socket.current.on("callAccepted", signal => {
+                setCallAccepted(true);
+                peer.signal(signal);
+            })
+        }).catch(function(error) {
+            if (error.name === 'PermissionDeniedError') {
+              console.log('Permissions have not been granted to use your camera and ' +
+                'microphone, you need to allow the page access to your devices in ' +
+                'order for the demo to work.');
+            }
+            console.log('getUserMedia error: ' + error.name);
+          });
+    }
+    function acceptCall() {
+       
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(newStream => {
+            setUserStream(newStream);
+            setCallAccepted(true);
+
+            console.log('accepted call bruh');
+            const peer = new Peer({
+                initiator: false,
+                trickle: false,
+                stream: newStream,
+            });
+            peer.on("signal", data => {
+                notifyAcceptCall({ signal: data, to: caller });
+            })
+            peer.on("stream", x => {
+                console.log(partnerStream);
+                setPartnerStream(x)
+                console.log("Reciever: I've got caller's stream!");
+                
+            });
+        
+            peer.signal(callerSignal);
+        }).catch(function(error) {
+            if (error.name === 'PermissionDeniedError') {
+              console.log('Permissions have not been granted to use your camera and ' +
+                'microphone, you need to allow the page access to your devices in ' +
+                'order for the demo to work.');
+            }
+            console.log('getUserMedia error: ' + error.name);
+         });
     }
     const value = {
         validateUserName,
         userName,
         hasUserName,
         partnerStream,
-        stream,
         users,
         yourID,
         receivingCall,
@@ -92,7 +163,11 @@ export default function ClientContextProvider(props) {
         caller,
         callAccepted,
         setCallAccepted,
-        signInError
+        signInError,
+        acceptCall,
+        callPeer,
+        userStream,
+    
     }
     return (
         <ClientContext.Provider value ={value}>
