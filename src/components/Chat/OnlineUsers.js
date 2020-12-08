@@ -4,6 +4,8 @@ import Typography from "@material-ui/core/Typography";
 import {ClientContext} from '../../contexts/ClientContext'
 import Grid from '@material-ui/core/Grid';
 import User from './User';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
 
 
 export default function OnlineUsers(props) {
@@ -31,18 +33,18 @@ export default function OnlineUsers(props) {
             <div className="panel-title">
                 <Typography variant='h5'>Active Users</Typography>
             </div>
-            <Grid container direction="column" alignItems="stretch">
+            <List container direction="column" alignItems="stretch">
                 {Object.keys(users).map(key => {
                     if (key === yourID) {
                         return null;
                     }
                     return (
-                        <Grid item  key={key}  onClick={() => handleClick(key)}>
+                        <ListItem button  key={key}  onClick={() => handleClick(key)}>
                             <User name={users[key]}  className="user" ></User>
-                        </Grid>
+                        </ListItem>
                     );
                 })}
-            </Grid>
+            </List>
         </div>
     )
 
