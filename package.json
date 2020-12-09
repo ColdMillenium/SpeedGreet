@@ -2,7 +2,7 @@
   "name": "calculator-app",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:5000/",
+  "proxy": "https://meet-and-greet.herokuapp.com/",
   "dependencies": {
     "@material-ui/core": "^4.9.14",
     "@material-ui/icons": "^4.11.2",
