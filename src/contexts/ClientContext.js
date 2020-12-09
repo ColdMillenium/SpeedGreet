@@ -43,6 +43,10 @@ export default function ClientContextProvider(props) {
             setUserName(name);
             setHasUserName(true);
         })
+        socket.current.on("callerLeftCall", id =>{
+            console.log(id + "leftcall");
+            leaveCall()
+        })
         
     },[]);
 
@@ -65,11 +69,7 @@ export default function ClientContextProvider(props) {
     }
     function notifyLeftCall(){
         leaveCall();
-        setCallAccepted(false);
-        setUserStream(null);
-        setPartnerStream(null);
-        setReceivingCall(false);
-        socket.current.emit("leftCall", {yourId: yourID, callerId: callerId});
+        socket.current.emit("leftCall", {userGone: yourID, userPresent: callerId});
     }
     function validateUserName(name){
         if(name.length < 3){
@@ -158,13 +158,17 @@ export default function ClientContextProvider(props) {
          });
     }
     function stopStream(stream){
-        stream.getTracks().forEach(function(track) {
-            track.stop();
-        });
+   
+            stream.getTracks().forEach(function(track) {
+                track.stop();
+            });
+            setUserStream(null);
     }
     function leaveCall(){
-       stopStream(userStream);
-       stopStream(partnerStream);
+        stopStream(userStream);
+        setCallAccepted(true);
+        setPartnerStream(null);
+        setReceivingCall(false);
     }
     const value = {
         validateUserName,
