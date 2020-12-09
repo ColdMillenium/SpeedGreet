@@ -10,7 +10,7 @@ export default function ClientContextProvider(props) {
     const [userStream, setUserStream] = useState(null);
     const [partnerStream, setPartnerStream] = useState(null);
     const [receivingCall, setReceivingCall] = useState(false);
-    const [caller, setCaller] = useState("");
+    const [callerId, setCallerId] = useState("");
     const [callerSignal, setCallerSignal] = useState();
     const [callAccepted, setCallAccepted] = useState(false);
     const [hasUserName, setHasUserName] = useState(false);
@@ -32,7 +32,7 @@ export default function ClientContextProvider(props) {
         })
         socket.current.on("hey", (data) => {
             setReceivingCall(true);
-            setCaller(data.from);
+            setCallerId(data.from);
             setCallerSignal(data.signal);
             //console.log("receiving call dawg");
         })
@@ -63,6 +63,14 @@ export default function ClientContextProvider(props) {
     function notifyAcceptCall(data){
         socket.current.emit("acceptCall", data)
     }
+    function notifyLeftCall(){
+        leaveCall();
+        setCallAccepted(false);
+        setUserStream(null);
+        setPartnerStream(null);
+        setReceivingCall(false);
+        socket.current.emit("leftCall", {yourId: yourID, callerId: callerId});
+    }
     function validateUserName(name){
         if(name.length < 3){
             setSignInError("userNameTooShort");
@@ -79,6 +87,7 @@ export default function ClientContextProvider(props) {
         socket.current.emit("yourUserName", name);
     }
     function callPeer(partnerId) {
+        setCallerId(partnerId);
         navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(newStream => {
             setUserStream(newStream);
             
@@ -129,7 +138,7 @@ export default function ClientContextProvider(props) {
                 stream: newStream,
             });
             peer.on("signal", data => {
-                notifyAcceptCall({ signal: data, to: caller });
+                notifyAcceptCall({ signal: data, to: callerId });
             })
             peer.on("stream", x => {
                 console.log(partnerStream);
@@ -148,6 +157,15 @@ export default function ClientContextProvider(props) {
             console.log('getUserMedia error: ' + error.name);
          });
     }
+    function stopStream(stream){
+        stream.getTracks().forEach(function(track) {
+            track.stop();
+        });
+    }
+    function leaveCall(){
+       stopStream(userStream);
+       stopStream(partnerStream);
+    }
     const value = {
         validateUserName,
         userName,
@@ -160,14 +178,14 @@ export default function ClientContextProvider(props) {
         onPartnerAcceptsCall,
         notifyAcceptCall,
         callerSignal,
-        caller,
+        callerId,
         callAccepted,
         setCallAccepted,
         signInError,
         acceptCall,
         callPeer,
         userStream,
-    
+        notifyLeftCall
     }
     return (
         <ClientContext.Provider value ={value}>

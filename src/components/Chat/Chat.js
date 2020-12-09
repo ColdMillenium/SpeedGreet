@@ -10,6 +10,7 @@ import Header from '../Header/Header'
 import OnlineUsers from './OnlineUsers';
 import Typography from "@material-ui/core/Typography";
 import Toolbar from '@material-ui/core/Toolbar';
+import Fab from '@material-ui/core/Fab';
 
 
 const useStyles = makeStyles((theme)=>({
@@ -19,13 +20,16 @@ const useStyles = makeStyles((theme)=>({
     },
     videoChatContainer: {
         padding: 0,
-        flex: 1,
-        postion: "relative"
+        postion: "relative",
+        margin: 0,
+        width: "100%",
+        height: "100%"
     },
     talkInfo:{
         
     },
     remoteVideo:{
+        objectFit:"fill",
         width: "100%",
         height: "100%",
         margin: 0,
@@ -42,9 +46,8 @@ const useStyles = makeStyles((theme)=>({
     },
     contentContainer: {
         width: '100%',
-        height: "calc(100vh - 89px)",
+        height: "auto",
         display: "flex",
-        justifyContent: "space-between",
         overflow: "hidden",
       }
   }));
@@ -55,17 +58,18 @@ export default function Chat() {
         userName, 
         users,
         receivingCall,
-        caller,
+        callerId,
         callAccepted,
         callPeer,
         acceptCall,
         userStream,
         partnerStream,
+        notifyLeftCall,
     } = useContext(ClientContext);
 
     const userVideoRef = useRef();
     const partnerVideoRef = useRef();
-
+    const caller = users[callerId];
     
     let userVideoWindow;
     if ( callAccepted ) {
@@ -74,10 +78,16 @@ export default function Chat() {
         }
         console.log("userVieoRef" + userVideoRef);
         userVideoWindow = (
-            <video ref={userVideoRef} autoPlay muted className={classes.localVideo} id="local-video"></video>
+            <div>
+                <video ref={userVideoRef} autoPlay muted className={classes.localVideo} id="local-video"></video>
+                <Button onClick={()=>{notifyLeftCall()}}variant="contained" color="secondary">
+                    Leave Call with {caller}
+                </Button>
+            </div>
+            
         );
     }
-    
+
     let partnerVideoWindow;
     if (callAccepted ) {
         if(partnerVideoRef.current){
@@ -86,7 +96,11 @@ export default function Chat() {
         } 
         console.log("showing partner stream");
         partnerVideoWindow = (
-            <video ref={partnerVideoRef} autoPlay className={classes.remoteVideo} id="remote-video"></video>
+            <div>
+                <Toolbar/>
+                <Toolbar/>
+                <video ref={partnerVideoRef} autoPlay className={classes.remoteVideo} id="remote-video"></video>
+            </div>
         );
     }
     
@@ -94,7 +108,7 @@ export default function Chat() {
     if (receivingCall && !callAccepted) {
         incomingCall = (
         <div>
-            <h1>{users[caller]}:{caller} is calling you</h1>
+            <h1>{caller} is calling you</h1>
             <button onClick={acceptCall}>Accept</button>
         </div>
         )
@@ -120,13 +134,16 @@ export default function Chat() {
             <div>
                 <div className={classes.hangout}>
                     <Header></Header>
-                    <div className={classes.contentContainer}>
-                        <OnlineUsers users={users} callPeer={callPeer}></OnlineUsers>
-                        {notification()}
-                        <div className={classes.videoChatContainer}>
-                            
-                            {partnerVideoWindow}
-                            {userVideoWindow}
+                        <div className={classes.contentContainer}>
+                            <OnlineUsers users={users} callPeer={callPeer}></OnlineUsers>
+                            <div className="chatArea">
+                                {notification()}
+                                <div className={classes.videoChatContainer}>
+                                    
+                                    {partnerVideoWindow}
+                                    {userVideoWindow}
+                                    
+                            </div>
                         </div>
                     </div>
                 </div>
