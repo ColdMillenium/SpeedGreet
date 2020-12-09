@@ -18,6 +18,7 @@ export default function ClientContextProvider(props) {
     const [userNameRef, setUserNameRef] = useState();
     const [canUpdateName, setCanUpdateName] = useState(false);
     const [signInError, setSignInError] = useState("");
+    const [callEnding, setCallEnding] = useState(false);
 
     const socket = useRef();
     useEffect(()=>{
@@ -45,7 +46,7 @@ export default function ClientContextProvider(props) {
         })
         socket.current.on("callerLeftCall", id =>{
             console.log(id + "leftcall");
-            leaveCall()
+            setCallEnding(true);
         })
         
     },[]);
@@ -68,7 +69,7 @@ export default function ClientContextProvider(props) {
         socket.current.emit("acceptCall", data)
     }
     function notifyLeftCall(){
-        leaveCall();
+        // leaveCall();
         socket.current.emit("leftCall", {userGone: yourID, userPresent: callerId});
     }
     function validateUserName(name){
@@ -166,9 +167,10 @@ export default function ClientContextProvider(props) {
     }
     function leaveCall(){
         stopStream(userStream);
-        setCallAccepted(true);
+        setCallAccepted(false);
         setPartnerStream(null);
         setReceivingCall(false);
+        setCallEnding(false);
     }
     const value = {
         validateUserName,
@@ -189,7 +191,9 @@ export default function ClientContextProvider(props) {
         acceptCall,
         callPeer,
         userStream,
-        notifyLeftCall
+        notifyLeftCall,
+        callEnding,
+        leaveCall
     }
     return (
         <ClientContext.Provider value ={value}>

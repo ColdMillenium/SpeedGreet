@@ -65,6 +65,8 @@ export default function Chat() {
         userStream,
         partnerStream,
         notifyLeftCall,
+        leaveCall,
+        callEnding
     } = useContext(ClientContext);
 
     const userVideoRef = useRef();
@@ -72,6 +74,9 @@ export default function Chat() {
     const caller = users[callerId];
     
     let userVideoWindow;
+    if(callEnding){
+        leaveCall();
+    }
     if ( callAccepted ) {
         if(userVideoRef.current){
             userVideoRef.current.srcObject = userStream;
