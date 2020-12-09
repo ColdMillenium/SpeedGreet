@@ -71,6 +71,7 @@ export default function ClientContextProvider(props) {
     function notifyLeftCall(){
         // leaveCall();
         socket.current.emit("leftCall", {userGone: yourID, userPresent: callerId});
+        setCallEnding(true);
     }
     function validateUserName(name){
         if(name.length < 3){
