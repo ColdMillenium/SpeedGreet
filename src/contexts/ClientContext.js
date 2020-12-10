@@ -132,6 +132,7 @@ export default function ClientContextProvider(props) {
         navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(newStream => {
             setUserStream(newStream);
             setCallAccepted(true);
+            setReceivingCall(false);
 
             console.log('accepted call bruh');
             const peer = new Peer({
@@ -160,7 +161,9 @@ export default function ClientContextProvider(props) {
          });
     }
     function stopStream(stream){
-   
+            if(stream === null){
+                return;
+            }
             stream.getTracks().forEach(function(track) {
                 track.stop();
             });
@@ -173,6 +176,7 @@ export default function ClientContextProvider(props) {
         setReceivingCall(false);
         setCallEnding(false);
     }
+
     const value = {
         validateUserName,
         userName,

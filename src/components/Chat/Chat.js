@@ -10,7 +10,7 @@ import Header from '../Header/Header'
 import OnlineUsers from './OnlineUsers';
 import Typography from "@material-ui/core/Typography";
 import Toolbar from '@material-ui/core/Toolbar';
-import Fab from '@material-ui/core/Fab';
+import IncomingCall from '../IncomingCall/IncomingCall'
 
 
 const useStyles = makeStyles((theme)=>({
@@ -142,7 +142,8 @@ export default function Chat() {
                         <div className={classes.contentContainer}>
                             <OnlineUsers users={users} callPeer={callPeer}></OnlineUsers>
                             <div className="chatArea">
-                                {notification()}
+                                {/* {notification()} */}
+                                <IncomingCall></IncomingCall>
                                 <div className={classes.videoChatContainer}>
                                     
                                     {partnerVideoWindow}
