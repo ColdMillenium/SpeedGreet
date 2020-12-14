@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.css": "/ColdMillenium/SpeedGreet/static/css/main.ce444b6d.chunk.css",
+    "main.js": "/ColdMillenium/SpeedGreet/static/js/main.88eab6fc.chunk.js",
+    "main.js.map": "/ColdMillenium/SpeedGreet/static/js/main.88eab6fc.chunk.js.map",
+    "runtime-main.js": "/ColdMillenium/SpeedGreet/static/js/runtime-main.35fe76bd.js",
+    "runtime-main.js.map": "/ColdMillenium/SpeedGreet/static/js/runtime-main.35fe76bd.js.map",
+    "static/js/2.25e4fdd6.chunk.js": "/ColdMillenium/SpeedGreet/static/js/2.25e4fdd6.chunk.js",
+    "static/js/2.25e4fdd6.chunk.js.map": "/ColdMillenium/SpeedGreet/static/js/2.25e4fdd6.chunk.js.map",
+    "index.html": "/ColdMillenium/SpeedGreet/index.html",
+    "precache-manifest.4811ccb6a0f3971cc8b5ccac171c156e.js": "/ColdMillenium/SpeedGreet/precache-manifest.4811ccb6a0f3971cc8b5ccac171c156e.js",
+    "service-worker.js": "/ColdMillenium/SpeedGreet/service-worker.js",
+    "static/css/main.ce444b6d.chunk.css.map": "/ColdMillenium/SpeedGreet/static/css/main.ce444b6d.chunk.css.map",
+    "static/js/2.25e4fdd6.chunk.js.LICENSE.txt": "/ColdMillenium/SpeedGreet/static/js/2.25e4fdd6.chunk.js.LICENSE.txt",
+    "static/media/MainMenuOptions.css": "/ColdMillenium/SpeedGreet/static/media/custom-cursor.d4f982fa.png",
+    "static/media/logo.svg": "/ColdMillenium/SpeedGreet/static/media/logo.5d5d9eef.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.35fe76bd.js",
+    "static/js/2.25e4fdd6.chunk.js",
+    "static/css/main.ce444b6d.chunk.css",
+    "static/js/main.88eab6fc.chunk.js"
+  ]
+}
