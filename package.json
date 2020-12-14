@@ -1,8 +1,9 @@
 {
-  "name": "calculator-app",
+  "name": "speed-greet",
   "version": "0.1.0",
   "private": true,
   "proxy": "https://meet-and-greet.herokuapp.com/",
+  "homepage":"./",
   "dependencies": {
     "@material-ui/core": "^4.9.14",
     "@material-ui/icons": "^4.11.2",
