@@ -1,6 +1,8 @@
 import React, {Component, useContext} from 'react';
 import Calculator from './components/Calculator/calculator';
 import Chat from './components/Chat/Chat';
+import Train from './components/Chat/Train';
+import Loading from './components/Chat/Loading';
 import SignIn from './components/SignIn/SignIn'
 import Button from '@material-ui/core/Button';
 import logo from './logo.svg';
@@ -9,7 +11,7 @@ import MainMenuPage from './components/MainMenuPage/MainMenuPage';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import {ClientContext} from './contexts/ClientContext'
 import { createMuiTheme, makeStyles, ThemeProvider, withTheme } from '@material-ui/core/styles';
-
+import Typography from "@material-ui/core/Typography"
 const theme = createMuiTheme({
   colors: {
     light: 'white',
@@ -58,7 +60,7 @@ export default function App(){
             </Route>
             <Route exact path="/Train">{()=>{
               if(hasUserName){
-                return <Chat></Chat>
+                return <Train></Train>
               }else{
                 return <SignIn></SignIn>
               }
@@ -66,7 +68,7 @@ export default function App(){
             </Route>
             <Route exact path="/Hangout">{()=>{
               if(hasUserName){
-                return <div>Hangout</div>
+                return <Loading></Loading>
               }else{
                 return <SignIn></SignIn>
               }
