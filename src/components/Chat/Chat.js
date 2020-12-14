@@ -136,24 +136,24 @@ export default function Chat() {
         }
     }
     return (
-            <div>
-                <div className={classes.hangout}>
-                    <Header></Header>
-                        <div className={classes.contentContainer}>
-                            <OnlineUsers users={users} callPeer={callPeer}></OnlineUsers>
-                            <div className="chatArea">
-                                {/* {notification()} */}
-                                <IncomingCall></IncomingCall>
-                                <div className={classes.videoChatContainer}>
-                                    
-                                    {partnerVideoWindow}
-                                    {userVideoWindow}
-                                    
-                            </div>
+          
+            <div className={classes.hangout}>
+                <Header></Header>
+                <div className={classes.contentContainer}>
+                    <OnlineUsers users={users} callPeer={callPeer}></OnlineUsers>
+                    <div className="chatArea">
+                        {/* {notification()} */}
+                        <IncomingCall></IncomingCall>
+                        <div className={classes.videoChatContainer}>
+                            
+                            {partnerVideoWindow}
+                            {userVideoWindow}
+                            
                         </div>
                     </div>
                 </div>
             </div>
+        
                
             
     )
