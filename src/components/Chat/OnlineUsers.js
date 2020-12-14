@@ -14,6 +14,7 @@ const useStyles = makeStyles((theme) =>({
     drawerContainer: {
         overflow: 'auto',
         color: theme.colors.light,
+        height: '100%',
     },
     title:{
         margin: '10 0 0 0',
@@ -29,6 +30,7 @@ const useStyles = makeStyles((theme) =>({
         width: drawerWidth,
         backgroundColor: theme.colors.dark,
         borderRight: "1px solid " + theme.colors.mid,
+        
     },
   }));
 export default function OnlineUsers(props) {
