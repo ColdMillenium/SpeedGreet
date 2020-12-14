@@ -22,7 +22,13 @@ export default function ClientContextProvider(props) {
 
     const socket = useRef();
     useEffect(()=>{
-        socket.current = io.connect("/");
+        
+        socket.current = io("https://meet-and-greet.herokuapp.com/", {
+            reconnectionDelayMax: 10000,
+            query: {
+              auth: "123"
+            }
+          });
         socket.current.on("yourID", (id) => {
             console.log("my id is : " + id)
             setYourID(id);
