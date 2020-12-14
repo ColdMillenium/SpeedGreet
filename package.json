@@ -13,6 +13,7 @@
     "cross-env": "^7.0.2",
     "electron-is-dev": "^1.2.0",
     "react": "^16.13.1",
+    "react-anime": "^3.0.3",
     "react-bootstrap": "^1.0.1",
     "react-dom": "^16.13.1",
     "react-overdrive": "0.0.10",
