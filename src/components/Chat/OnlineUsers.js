@@ -37,13 +37,15 @@ const DrawerContainer = styled.div`
     overflow: auto;
     color: ${ props => props.theme.colors.light};
     height: 100vh;
-    background-color: #181c21;
+    background-color: #1e2126;
 `;
 const Title = styled.div`
-    margin: 10px 0px 0px 0px;
-    padding-left: 30px;
+    display: flex;
     border-bottom: 1px solid #cddfe7;
-    padding-bottom: 10px;
+    font-size: 1.2em;
+    justify-content: center;
+    align-items: center;
+    padding: 1em;
 `;
 const Drawer = styled.div`
     width: ${() => drawerWidth};
@@ -65,9 +67,7 @@ export function OnlineUsers(props) {
             {/* this toolbar on it's own makes space for one "line" */}
             {/* Thisi s necessary because otherwise the header would cover it. */}
             <DrawerContainer>
-                <Title >
-                    <h5>Active Users</h5>
-                </Title>
+                <Title>Active Users</Title>
                 <List container direction="column" alignItems="stretch">
                     {Object.keys(users).map(key => {
                         
