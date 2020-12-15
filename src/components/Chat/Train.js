@@ -78,6 +78,7 @@ const GridLayout = styled.div`
     "users video"
     "users chat" ;
     grid-template-columns: 240px auto;
+    overflow: hidden;
 `;
 const HeaderContainer = styled.div`
     grid-area: header;
@@ -92,6 +93,7 @@ const VideoChatContainer = styled.div`
 `;
 const UsersContainer = styled.div`
     grid-area: users;
+    overflow-x: hidden;
 `;
 export function Train(props) {
     const {
