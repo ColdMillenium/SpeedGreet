@@ -9,7 +9,8 @@ import {ClientContext} from '../../contexts/ClientContext'
 import Header from '../Header/Header'
 import OnlineUsers from './OnlineUsers';
 import Toolbar from '@material-ui/core/Toolbar';
-import IncomingCall from '../IncomingCall/IncomingCall'
+import IncomingCall from '../IncomingCall/IncomingCall';
+import styled ,{ withTheme, keyframes} from 'styled-components';
 
 
 const useStyles = makeStyles((theme)=>({
@@ -50,7 +51,36 @@ const useStyles = makeStyles((theme)=>({
         overflow: "hidden",
       }
   }));
-export default function Train() {
+
+const videoChatContainer = styled.div`
+    padding: 0px;
+    position: relative;
+    margin: 0px;
+    width: 100%;
+    height: 100%;
+`;
+const remoteVideo = styled.div`
+    object-fit: fill;
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+`;
+const localVideo = styled.div`
+    position: absolute;
+    border: 1px solid ${props => props.theme.colors.accent};
+    bottom: 0px;
+    right: 0px;
+    border-radius: 5px;
+    width: 300px;
+    box-shadow: 0 3 6 rgba(0, 0, 0, 0.2);
+`;
+const contentContainer = styled.div`
+    width: 100%;
+    height: auto;
+    display: flex;
+    overflow: hidden;
+`;
+export function Train() {
     const classes = useStyles();
     const {
         userName, 
@@ -156,3 +186,5 @@ export default function Train() {
             
     )
 }
+
+export default withTheme(Train);
