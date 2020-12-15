@@ -40,7 +40,6 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     background-color: ${theme.colors.dark};
     color: ${theme.colors.light};
-    padding: 20px;
     height: 100vh;
     width: 100vw;
   }
