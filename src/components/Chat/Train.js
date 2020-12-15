@@ -1,71 +1,61 @@
 import React, {useEffect, useState, useRef, createRef, useContext} from 'react';
-import io from "socket.io-client";
-import Peer from "simple-peer";
-import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
-import { makeStyles, useTheme} from '@material-ui/core/styles'
 import './Chat.css'
 import {ClientContext} from '../../contexts/ClientContext'
 import Header from '../Header/Header'
 import OnlineUsers from './OnlineUsers';
 import Toolbar from '@material-ui/core/Toolbar';
 import IncomingCall from '../IncomingCall/IncomingCall';
-import styled ,{ withTheme, keyframes} from 'styled-components';
+import styled ,{ withTheme} from 'styled-components';
 
 
-const useStyles = makeStyles((theme)=>({
-    hangout: {
-      background: theme.colors.dark,
-      color:theme.colors.light,
-    },
-    videoChatContainer: {
-        padding: 0,
-        postion: "relative",
-        margin: 0,
-        width: "100%",
-        height: "100%"
-    },
-    talkInfo:{
+// const useStyles = makeStyles((theme)=>({
+//     hangout: {
+//       background: theme.colors.dark,
+//       color:theme.colors.light,
+//     },
+//     videoChatContainer: {
+//         padding: 0,
+//         postion: "relative",
+//         margin: 0,
+//         width: "100%",
+//         height: "100%"
+//     },
+//     talkInfo:{
         
-    },
-    remoteVideo:{
-        objectFit:"fill",
-        width: "100%",
-        height: "100%",
-        margin: 0,
-        madding:0,
-    },
-    localVideo:{
-        position: "absolute",
-        border: "1px solid " + theme.colors.accent,
-        bottom: 0,
-        right: 0,
-        borderRadius: 5,
-        width: 300,
-        boxShadow: "0 3 6 rgba(0, 0, 0, 0.2)"
-    },
-    contentContainer: {
-        width: '100%',
-        height: "auto",
-        display: "flex",
-        overflow: "hidden",
-      }
-  }));
+//     },
+//     remoteVideo:{
+//         objectFit:"fill",
+//         width: "100%",
+//         height: "100%",
+//         margin: 0,
+//         madding:0,
+//     },
+//     localVideo:{
+//         position: "absolute",
+//         border: "1px solid " + theme.colors.accent,
+//         bottom: 0,
+//         right: 0,
+//         borderRadius: 5,
+//         width: 300,
+//         boxShadow: "0 3 6 rgba(0, 0, 0, 0.2)"
+//     },
+//     contentContainer: {
+//         width: '100%',
+//         height: "auto",
+//         display: "flex",
+//         overflow: "hidden",
+//       }
+//   }));
 
-const videoChatContainer = styled.div`
-    padding: 0px;
-    position: relative;
-    margin: 0px;
-    width: 100%;
-    height: 100%;
-`;
-const remoteVideo = styled.div`
+
+const RemoteVideo = styled.video`
     object-fit: fill;
     width: 100%;
     height: 100%;
     margin: 0px;
 `;
-const localVideo = styled.div`
+const LocalVideo = styled.video`
     position: absolute;
     border: 1px solid ${props => props.theme.colors.accent};
     bottom: 0px;
@@ -74,14 +64,36 @@ const localVideo = styled.div`
     width: 300px;
     box-shadow: 0 3 6 rgba(0, 0, 0, 0.2);
 `;
-const contentContainer = styled.div`
+const ContentContainer = styled.div`
     width: 100%;
     height: auto;
     display: flex;
     overflow: hidden;
 `;
-export function Train() {
-    const classes = useStyles();
+
+const GridLayout = styled.div`
+    display: grid;
+    grid-template-areas: 
+    "users header"
+    "users video"
+    "users chat" ;
+    grid-template-columns: 240px auto;
+`;
+const HeaderContainer = styled.div`
+    grid-area: header;
+`;
+const ChatContainer = styled.div`
+    border: 2px solid blue;
+    grid-area: chat;
+`;
+const VideoChatContainer = styled.div`
+    border: 2px solid blue;
+    grid-area: video;
+`;
+const UsersContainer = styled.div`
+    grid-area: users;
+`;
+export function Train(props) {
     const {
         userName, 
         users,
@@ -112,7 +124,7 @@ export function Train() {
         console.log("userVieoRef" + userVideoRef);
         userVideoWindow = (
             <div>
-                <video ref={userVideoRef} autoPlay muted className={classes.localVideo} id="local-video"></video>
+                <LocalVideo ref={userVideoRef} autoPlay muted id="local-video"></LocalVideo>
                 <Button onClick={()=>{notifyLeftCall()}}variant="contained" color="secondary">
                     Leave Call with {caller}
                 </Button>
@@ -132,7 +144,7 @@ export function Train() {
             <div>
                 <Toolbar/>
                 <Toolbar/>
-                <video ref={partnerVideoRef} autoPlay className={classes.remoteVideo} id="remote-video"></video>
+                <RemoteVideo ref={partnerVideoRef} autoPlay id="remote-video"></RemoteVideo>
             </div>
         );
     }
@@ -153,10 +165,10 @@ export function Train() {
                 <div>
                     <Toolbar/>
                     <Toolbar/>
-                    <h5 variant="h5" className={classes.talkInfo} > 
+                    <h5> 
                         Welcome {userName}!
                     </h5>
-                    <h6 variant="h6" className={classes.talkInfo} > 
+                    <h6 > 
                         {incomingCall}
                     </h6>
                 </div>
@@ -164,26 +176,20 @@ export function Train() {
         }
     }
     return (
-          
-            <div className={classes.hangout}>
-                <Header></Header>
-                <div className={classes.contentContainer}>
+            <GridLayout>
+                <HeaderContainer>
+                    <Header/>
+                </HeaderContainer>
+                <UsersContainer>
                     <OnlineUsers users={users} callPeer={callPeer}></OnlineUsers>
-                    <div className="chatArea">
-                        {/* {notification()} */}
-                        <IncomingCall></IncomingCall>
-                        <div className={classes.videoChatContainer}>
-                            
-                            {partnerVideoWindow}
-                            {userVideoWindow}
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-        
-               
-            
+                </UsersContainer>   
+                <VideoChatContainer> 
+                    <IncomingCall></IncomingCall>
+                    {partnerVideoWindow}
+                    {userVideoWindow}
+                </VideoChatContainer>
+                <ChatContainer>TODO: Impliment chat</ChatContainer>
+            </GridLayout>      
     )
 }
 

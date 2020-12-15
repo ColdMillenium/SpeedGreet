@@ -3,59 +3,71 @@ import { makeStyles, useTheme} from '@material-ui/core/styles'
 import {ClientContext} from '../../contexts/ClientContext'
 import User from './User';
 import List from '@material-ui/core/List';
-import Drawer from '@material-ui/core/Drawer';
 import Toolbar from '@material-ui/core/Toolbar';
+import styled ,{ withTheme} from 'styled-components';
 
 
-const drawerWidth = 240;
+const drawerWidth = "240px";
 
-const useStyles = makeStyles((theme) =>({
-    drawerContainer: {
-        overflow: 'auto',
-        color: theme.colors.light,
-        height: '100%',
-    },
-    title:{
-        margin: '10 0 0 0',
-        paddingLeft: 30,
-        borderBottom: '1px solid #cddfe7',
-        paddingBottom: 10,
-    },
-    drawer: {//drawer
-        width: drawerWidth,
-        flexShrink: 0,
-    },
-    drawerPaper: {//what's inside the drawer
-        width: drawerWidth,
-        backgroundColor: theme.colors.dark,
-        borderRight: "1px solid " + theme.colors.mid,
+// const useStyles = makeStyles((theme) =>({
+//     drawerContainer: {
+//         overflow: 'auto',
+//         color: theme.colors.light,
+//         height: '100%',
+//     },
+//     title:{
+//         margin: '10 0 0 0',
+//         paddingLeft: 30,
+//         borderBottom: '1px solid #cddfe7',
+//         paddingBottom: 10,
+//     },
+//     drawer: {//drawer
+//         width: drawerWidth,
+//         flexShrink: 0,
+//     },
+//     drawerPaper: {//what's inside the drawer
+//         width: drawerWidth,
+//         backgroundColor: theme.colors.dark,
+//         borderRight: "1px solid " + theme.colors.mid,
         
-    },
-  }));
-export default function OnlineUsers(props) {
-    const theme = useTheme();
+//     },
+//   }));
+
+const DrawerContainer = styled.div`
+    overflow: auto;
+    color: ${ props => props.theme.colors.light};
+    height: 100vh;
+    background-color: #181c21;
+`;
+const Title = styled.div`
+    margin: 10px 0px 0px 0px;
+    padding-left: 30px;
+    border-bottom: 1px solid #cddfe7;
+    padding-bottom: 10px;
+`;
+const Drawer = styled.div`
+    width: ${() => drawerWidth};
+    flex-shrink: 0px;
+`;
+const DrawerPaper = styled.div`
+    width: ${() => drawerWidth};
+    background-color: ${ props => props.theme.colors.dark};
+    border-right: 1px solid  + ${ props => props.theme.colors.mid};
+`;
+export function OnlineUsers(props) {
    
     const { yourID } = useContext(ClientContext);
     const callPeer = props.callPeer;
     const users = props.users;
-    const classes = useStyles();
 
     return (
-        <Drawer
-            className={classes.drawer}
-            variant="permanent"
-            classes={{
-            paper: classes.drawerPaper,
-            }}
-        >
+        <Drawer>
             {/* this toolbar on it's own makes space for one "line" */}
             {/* Thisi s necessary because otherwise the header would cover it. */}
-            <Toolbar/> 
-            <Toolbar/>
-            <div className={classes.drawerContainer} id="active-user-container">
-                <div className={classes.title}>
-                    <h5 variant='h5'>Active Users</h5>
-                </div>
+            <DrawerContainer>
+                <Title >
+                    <h5>Active Users</h5>
+                </Title>
                 <List container direction="column" alignItems="stretch">
                     {Object.keys(users).map(key => {
                         
@@ -71,42 +83,9 @@ export default function OnlineUsers(props) {
                         );
                     })}
                 </List>
-            </div>
+            </DrawerContainer>
         </Drawer>
     )
-
-    
-//   .active-users-panel {
-//     width: 300px;
-//     height: 100%;
-//     border-right: 1px solid #cddfe7;
-//   }
-  
-//   .panel-title {
-//     margin: 10px 0 0 0;
-//     padding-left: 30px;
-//     font-weight: 500;
-//     font-size: 18px;
-//     border-bottom: 1px solid #cddfe7;
-//     padding-bottom: 10px;
-//   }
-  
-//   .active-user {
-//     padding: 10px 30px;
-//     border-bottom: 1px solid #cddfe7;
-//     cursor: pointer;
-//     user-select: none;
-//   }
-  
-//   .active-user:hover {
-//     background-color: #e8e9eb;
-//     transition: background-color 0.5s ease;
-//   }
-  
-//   .active-user--selected {
-//     background-color: #fff;
-//     border-right: 5px solid #65a9e5;
-//     font-weight: 500;
-//     transition: all 0.5s ease;
-//   }
 }
+
+export default withTheme(OnlineUsers)
