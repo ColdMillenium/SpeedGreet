@@ -67,7 +67,7 @@ export function OnlineUsers(props) {
             {/* this toolbar on it's own makes space for one "line" */}
             {/* Thisi s necessary because otherwise the header would cover it. */}
             <DrawerContainer>
-                <Title>Active Users</Title>
+                <Title>Online Users</Title>
                 <List container direction="column" alignItems="stretch">
                     {Object.keys(users).map(key => {
                         
