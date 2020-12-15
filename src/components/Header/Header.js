@@ -33,13 +33,11 @@ const AppBar = styled.div`
       color: ${props => props.theme.colors.accent};
       padding: 0.2em;
       box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
-      top: 0px;
-      width: 100vw;
+      width:100%;
       height: fit-content;
       display: flex;
       align-items: center;
       justify-content: center;
-      position: absolute;
    
 `;
 
@@ -57,7 +55,7 @@ const TitleText = styled.div`
 
 export  function Header() {;
     return (
-        <AppBar position="fixed" >
+        <AppBar >
             {/* Toolbar makes all these items fit one one line */}
             <Toolbar>
             <LogoImg 
