@@ -102,6 +102,7 @@ export default function ClientContextProvider(props) {
             //Since you are the initiator. the Signal will start from you, not from the parter.
             const peer = new Peer({
                 initiator: true,
+                config: { iceServers: [{"url":"stun:global.stun.twilio.com:3478?transport=udp","urls":"stun:global.stun.twilio.com:3478?transport=udp"},{"url":"turn:global.turn.twilio.com:3478?transport=udp","username":"ab0e6dd0637d0c0302cda644e31464cefd83c74aa663ca163953c24110a82efe","urls":"turn:global.turn.twilio.com:3478?transport=udp","credential":"Ufh56vO/Oy/gxpOo144kg/G7VMwEWxUJ/8y78dUSeuw="},{"url":"turn:global.turn.twilio.com:3478?transport=tcp","username":"ab0e6dd0637d0c0302cda644e31464cefd83c74aa663ca163953c24110a82efe","urls":"turn:global.turn.twilio.com:3478?transport=tcp","credential":"Ufh56vO/Oy/gxpOo144kg/G7VMwEWxUJ/8y78dUSeuw="},{"url":"turn:global.turn.twilio.com:443?transport=tcp","username":"ab0e6dd0637d0c0302cda644e31464cefd83c74aa663ca163953c24110a82efe","urls":"turn:global.turn.twilio.com:443?transport=tcp","credential":"Ufh56vO/Oy/gxpOo144kg/G7VMwEWxUJ/8y78dUSeuw="}] },
                 trickle: false,
                 stream: newStream,
             });
