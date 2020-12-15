@@ -8,7 +8,6 @@ import './Chat.css'
 import {ClientContext} from '../../contexts/ClientContext'
 import Header from '../Header/Header'
 import OnlineUsers from './OnlineUsers';
-import Typography from "@material-ui/core/Typography";
 import Toolbar from '@material-ui/core/Toolbar';
 import IncomingCall from '../IncomingCall/IncomingCall'
 
@@ -125,12 +124,12 @@ export default function Chat() {
                 <div>
                     <Toolbar/>
                     <Toolbar/>
-                    <Typography variant="h5" className={classes.talkInfo} > 
+                    <h5 variant="h5" className={classes.talkInfo} > 
                         Welcome {userName}!
-                    </Typography>
-                    <Typography variant="h6" className={classes.talkInfo} > 
+                    </h5>
+                    <h6 variant="h6" className={classes.talkInfo} > 
                         {incomingCall}
-                    </Typography>
+                    </h6>
                 </div>
             )
         }

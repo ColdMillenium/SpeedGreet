@@ -1,6 +1,5 @@
 import React ,{useContext} from 'react'
 import { makeStyles, useTheme} from '@material-ui/core/styles'
-import Typography from "@material-ui/core/Typography";
 import {ClientContext} from '../../contexts/ClientContext'
 import User from './User';
 import List from '@material-ui/core/List';
@@ -55,7 +54,7 @@ export default function OnlineUsers(props) {
             <Toolbar/>
             <div className={classes.drawerContainer} id="active-user-container">
                 <div className={classes.title}>
-                    <Typography variant='h5'>Active Users</Typography>
+                    <h5 variant='h5'>Active Users</h5>
                 </div>
                 <List container direction="column" alignItems="stretch">
                     {Object.keys(users).map(key => {
