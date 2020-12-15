@@ -1,4 +1,4 @@
-import React, {Component, useContext} from 'react';
+import React, {Component, useContext, Fragment} from 'react';
 import Calculator from './components/Calculator/calculator';
 import Chat from './components/Chat/Chat';
 import Train from './components/Chat/Train';
@@ -11,7 +11,7 @@ import MainMenuPage from './components/MainMenuPage/MainMenuPage';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import {ClientContext} from './contexts/ClientContext'
 import { createMuiTheme, makeStyles, withTheme } from '@material-ui/core/styles';
-import {ThemeProvider} from 'styled-components';
+import {ThemeProvider, createGlobalStyle} from 'styled-components';
 
 // const theme = createMuiTheme({
 //   colors: {
@@ -32,25 +32,32 @@ const theme = {
   bs: `0.25em 0.25em 0.75em rgba(0,0,0,.25),
   0.125em 0.125em 0.25em rgba(0,0,0,.15)`
 }
-const useStyles = makeStyles({
-  root: {
-    background: theme.colors.dark,
-    color:theme.colors.light,
-    height: "100vh",
-    width: "100vw",
-    margin: 0,
-    padding: 0
-  },
-});
+
+const GlobalStyle = createGlobalStyle`
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    background-color: ${theme.colors.dark};
+    color: ${theme.colors.light};
+    padding: 20px;
+    height: 100vh;
+    width: 100vw;
+  }
+  p{
+    font-family: 'Quicksand', sans-serif;
+  }
+`;
+
     
     
 export default function App(){
-  const classes = useStyles();
   const {confirmUserName, hasUserName} = useContext(ClientContext);
   
 
     return (
-    <div className={classes.root}>
+    <Fragment>
+      <GlobalStyle/>
       <ThemeProvider theme={theme}>
         <Switch>
             <Route exact path="/">{ ()=>{
@@ -112,7 +119,7 @@ export default function App(){
             </Route>
         </Switch>
       </ThemeProvider>
-    </div>  
+    </Fragment>  
     );
   
 
