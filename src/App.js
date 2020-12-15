@@ -10,16 +10,28 @@ import logo from './logo.svg';
 import MainMenuPage from './components/MainMenuPage/MainMenuPage';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import {ClientContext} from './contexts/ClientContext'
-import { createMuiTheme, makeStyles, ThemeProvider, withTheme } from '@material-ui/core/styles';
-import Typography from "@material-ui/core/Typography"
-const theme = createMuiTheme({
+import { createMuiTheme, makeStyles, withTheme } from '@material-ui/core/styles';
+import {ThemeProvider} from 'styled-components';
+
+// const theme = createMuiTheme({
+//   colors: {
+//     light: 'white',
+//     mid: '#a9abb3',
+//     dark: '#272c34',
+//     accent: "#a6e22e",
+//   },
+// });
+const theme = {
   colors: {
     light: 'white',
     mid: '#a9abb3',
     dark: '#272c34',
     accent: "#a6e22e",
+    error: '#ea666e',
   },
-});
+  bs: `0.25em 0.25em 0.75em rgba(0,0,0,.25),
+  0.125em 0.125em 0.25em rgba(0,0,0,.15)`
+}
 const useStyles = makeStyles({
   root: {
     background: theme.colors.dark,
