@@ -42,6 +42,7 @@ const GlobalStyle = createGlobalStyle`
     color: ${theme.colors.light};
     height: 100vh;
     width: 100vw;
+    overflow:hidden;
   }
   p{
     font-family: 'Quicksand', sans-serif;
