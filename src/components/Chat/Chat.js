@@ -1,159 +1,130 @@
-import React, {useEffect, useState, useRef, createRef, useContext} from 'react';
-import io from "socket.io-client";
-import Peer from "simple-peer";
-import TextField from '@material-ui/core/TextField'
-import Button from '@material-ui/core/Button'
-import { makeStyles, useTheme} from '@material-ui/core/styles'
-import './Chat.css'
+import React,  {useContext} from 'react'
+import styled ,{ withTheme, keyframes} from 'styled-components';
 import {ClientContext} from '../../contexts/ClientContext'
-import Header from '../Header/Header'
-import OnlineUsers from './OnlineUsers';
-import Toolbar from '@material-ui/core/Toolbar';
-import IncomingCall from '../IncomingCall/IncomingCall'
 
+const testData = [
+    {msg:"Hey", from:"Andrew", to:"Lindsey", time:"2:00"},
+    {msg:"What's up", from:"Lindsey", to:"Andrew", time:"2:50"},
+    {msg:"Nothing much", from:"Lindsey", to:"Andrew", time:"4:50"},
+    {msg:"Yeah I'm fine too", from:"Andrew", to:"Lindsey", time:"5:00"},
+    {msg:"5 guys dawg", from:"Lindsey", to:"Andrew", time:"7:00"},
+    {msg:"Hey", from:"Andrew", to:"Lindsey", time:"2:00"},
+    {msg:"What's up", from:"Lindsey", to:"Andrew", time:"2:50"},
+    {msg:"Nothing much", from:"Lindsey", to:"Andrew", time:"4:50"},
+    {msg:"Yeah I'm fine too", from:"Andrew", to:"Lindsey", time:"5:00"},
+    {msg:"5 guys dawg", from:"Lindsey", to:"Andrew", time:"7:00"},
+    {msg:"Hey", from:"Andrew", to:"Lindsey", time:"2:00"},
+    {msg:"What's up", from:"Lindsey", to:"Andrew", time:"2:50"},
+    {msg:"Nothing much", from:"Lindsey", to:"Andrew", time:"4:50"},
+    {msg:"Yeah I'm fine too", from:"Andrew", to:"Lindsey", time:"5:00"},
+    {msg:"5 guys dawg", from:"Lindsey", to:"Andrew", time:"7:00"},
+    {msg:"Hey", from:"Andrew", to:"Lindsey", time:"2:00"},
+    {msg:"What's up", from:"Lindsey", to:"Andrew", time:"2:50"},
+    {msg:"Nothing much", from:"Lindsey", to:"Andrew", time:"4:50"},
+    {msg:"Yeah I'm fine too", from:"Andrew", to:"Lindsey", time:"5:00"},
+    {msg:"5 guys dawg", from:"Lindsey", to:"Andrew", time:"7:00"},
+    {msg:"Hey", from:"Andrew", to:"Lindsey", time:"2:00"},
+    {msg:"What's up", from:"Lindsey", to:"Andrew", time:"2:50"},
+    {msg:"Nothing much", from:"Lindsey", to:"Andrew", time:"4:50"},
+    {msg:"Yeah I'm fine too", from:"Andrew", to:"Lindsey", time:"5:00"},
+    {msg:"5 guys dawg", from:"Lindsey", to:"Andrew", time:"7:00"},
+    
+]
+const ChatContainer = styled.div`
+    height: 100%;
+    grid-area: chat;
+    display:grid;
+    grid-template-areas: 
+    "msg"
+    "input" ;
+    grid-template-rows: calc(100vh - 100px) 90px;
+    grid-row-gap: 10px;
+`;
 
-const useStyles = makeStyles((theme)=>({
-    hangout: {
-      background: theme.colors.dark,
-      color:theme.colors.light,
-    },
-    videoChatContainer: {
-        padding: 0,
-        postion: "relative",
-        margin: 0,
-        width: "100%",
-        height: "100%"
-    },
-    talkInfo:{
+const Input = styled.input`
+        grid-area: input;
+        color: grey;
+        height: 2em;
+        font-size: 1em;
+        width: 90%;
+        background-color: #363d47;
+        border-radius: 0.4rem;
+        border: none;
+        outline: none;
+        padding: 5px;
+        justify-self: center;
+        /* padding: 5px; */
+
+        &:focus {
+           border: solid 1px #47cf73;
+        };
+
+        &::placeholder{
+            color: #47cf73;
+            opacity: 0.3;
+        };
+    `
+    const MessageContainer = styled.div`
+        grid-area: msg;
+        padding: 5px;
+        width: 90%;
+        overflow: auto;
+        justify-self: center;
+    `
+    const MessageList = styled.div`
+        margin: 0;
+        padding: 0;
+    `
+    const MessageItem = styled.div`
+        background-color: ${props =>{
+            if(props.fromUs){
+                return 'blue';
+            }else{
+                return 'grey';
+            }
+        }};
+        color: ${props =>{
+            if(props.fromUs){
+                return 'white';
+            }else{
+                return 'black';
+            }
+        }};
+        width: fit-content;
+        margin: ${props =>{
+            if(props.fromUs){
+                return '0px 0px 20px auto';
+            }else{
+                return '0px auto 20px 0px';
+            }
+        }};
+        padding: 2em;
+        border-radius: 5px;
+        font-size: 1em;
         
-    },
-    remoteVideo:{
-        objectFit:"fill",
-        width: "100%",
-        height: "100%",
-        margin: 0,
-        madding:0,
-    },
-    localVideo:{
-        position: "absolute",
-        border: "1px solid " + theme.colors.accent,
-        bottom: 0,
-        right: 0,
-        borderRadius: 5,
-        width: 300,
-        boxShadow: "0 3 6 rgba(0, 0, 0, 0.2)"
-    },
-    contentContainer: {
-        width: '100%',
-        height: "auto",
-        display: "flex",
-        overflow: "hidden",
-      }
-  }));
-export default function Chat() {
-    const theme = useTheme();
-    const classes = useStyles();
-    const {
-        userName, 
-        users,
-        receivingCall,
-        callerId,
-        callAccepted,
-        callPeer,
-        acceptCall,
-        userStream,
-        partnerStream,
-        notifyLeftCall,
-        leaveCall,
-        callEnding
-    } = useContext(ClientContext);
-
-    const userVideoRef = useRef();
-    const partnerVideoRef = useRef();
-    const caller = users[callerId];
-    
-    let userVideoWindow;
-    if(callEnding){
-        leaveCall();
-    }
-    if ( callAccepted ) {
-        if(userVideoRef.current){
-            userVideoRef.current.srcObject = userStream;
-        }
-        console.log("userVieoRef" + userVideoRef);
-        userVideoWindow = (
-            <div>
-                <video ref={userVideoRef} autoPlay muted className={classes.localVideo} id="local-video"></video>
-                <Button onClick={()=>{notifyLeftCall()}}variant="contained" color="secondary">
-                    Leave Call with {caller}
-                </Button>
-            </div>
-            
-        );
-    }
-
-    let partnerVideoWindow;
-    if (callAccepted ) {
-        if(partnerVideoRef.current){
-            console.log("partner REF IS HERE!")
-            partnerVideoRef.current.srcObject = partnerStream;
-        } 
-        console.log("showing partner stream");
-        partnerVideoWindow = (
-            <div>
-                <Toolbar/>
-                <Toolbar/>
-                <video ref={partnerVideoRef} autoPlay className={classes.remoteVideo} id="remote-video"></video>
-            </div>
-        );
-    }
-    
-    let incomingCall;
-    if (receivingCall && !callAccepted) {
-        incomingCall = (
-        <div>
-            <h1>{caller} is calling you</h1>
-            <button onClick={acceptCall}>Accept</button>
-        </div>
-        )
-    }
-    let notification = () =>{
-        console.log("wtf dude "+ callAccepted);
-        if(!callAccepted){
-            return (
-                <div>
-                    <Toolbar/>
-                    <Toolbar/>
-                    <h5 variant="h5" className={classes.talkInfo} > 
-                        Welcome {userName}!
-                    </h5>
-                    <h6 variant="h6" className={classes.talkInfo} > 
-                        {incomingCall}
-                    </h6>
-                </div>
-            )
-        }
-    }
+    `
+ function Chat(props) {
+    // const {
+        
+    // } = useContext(ClientContext);
+    const userName = "Andrew";
+    const caller = "Lindsey";
     return (
-          
-            <div className={classes.hangout}>
-                <Header></Header>
-                <div className={classes.contentContainer}>
-                    <OnlineUsers users={users} callPeer={callPeer}></OnlineUsers>
-                    <div className="chatArea">
-                        {/* {notification()} */}
-                        <IncomingCall></IncomingCall>
-                        <div className={classes.videoChatContainer}>
-                            
-                            {partnerVideoWindow}
-                            {userVideoWindow}
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-        
-               
+        <ChatContainer>
+            <MessageContainer>
+                <MessageList>
+                    {
+                        testData.map(( msgData =>{
+                            const fromUs = (msgData.from === userName);
+                            return (<MessageItem key={msgData.time} fromUs={fromUs}>{msgData.msg}</MessageItem>)
+                        }))
+                    }
+                </MessageList>
+            </MessageContainer>
+            <Input placeholder= "Send Message" disabled={props.disabled}></Input>
             
+        </ChatContainer>
     )
 }
+
+export default withTheme(Chat);
