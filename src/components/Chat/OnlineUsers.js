@@ -94,8 +94,6 @@ export function OnlineUsers(props) {
                             <li key={key}>
                                 <User name={users[key]}  callPeer={() => callPeer(key)} className="user" ></User>
                             </li>
-                           
-                            
                         );
                     })}
                 </List>
