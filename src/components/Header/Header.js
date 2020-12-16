@@ -1,6 +1,5 @@
 import React from 'react'
 import {ClientContext} from '../../contexts/ClientContext'
-import { makeStyles, useTheme} from '@material-ui/core/styles'
 // import AppBar from '@material-ui/core/AppBar';
 import styled ,{ withTheme} from 'styled-components';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -34,7 +33,7 @@ const AppBar = styled.div`
       padding: 0.2em;
       box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
       width:100%;
-      height: fit-content;
+      height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;

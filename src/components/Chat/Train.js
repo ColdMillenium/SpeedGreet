@@ -78,6 +78,7 @@ const GridLayout = styled.div`
     "users video"
     "users chat" ;
     grid-template-columns: 240px calc(100vw - 240px);
+    grid-template-rows: 40px auto 25vh;
     overflow: hidden;
 `;
 const HeaderContainer = styled.div`

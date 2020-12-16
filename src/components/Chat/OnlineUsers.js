@@ -2,7 +2,7 @@ import React ,{useContext} from 'react'
 import { makeStyles, useTheme} from '@material-ui/core/styles'
 import {ClientContext} from '../../contexts/ClientContext'
 import User from './User';
-import List from '@material-ui/core/List';
+//import List from '@material-ui/core/List';
 import Toolbar from '@material-ui/core/Toolbar';
 import styled ,{ withTheme} from 'styled-components';
 
@@ -34,27 +34,45 @@ const drawerWidth = "240px";
 //   }));
 
 const DrawerContainer = styled.div`
-    overflow: auto;
+    display:flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    
+    overflow-x: hidden;
     color: ${ props => props.theme.colors.light};
     height: 100vh;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 1em 0px;
     background-color: #1e2126;
+   
 `;
 const Title = styled.div`
-    display: flex;
-    border-bottom: 1px solid #cddfe7;
     font-size: 1.2em;
-    justify-content: center;
-    align-items: center;
-    padding: 1em;
+    width: 100%;
+    max-height: 3em;
+    background-color: green;
+    white-space: nowrap;
+    text-align: center;
+  
 `;
-const Drawer = styled.div`
-    width: ${() => drawerWidth};
-    flex-shrink: 0px;
-`;
-const DrawerPaper = styled.div`
-    width: ${() => drawerWidth};
-    background-color: ${ props => props.theme.colors.dark};
-    border-right: 1px solid  + ${ props => props.theme.colors.mid};
+const List = styled.ul`
+    margin:0;
+    padding:0;
+    width: 100%;
+    list-style-type: none;
+    & li{
+        padding:0;
+        margin:0;
+        width:100%;
+        /* display:flex;
+        justify-content: center;
+        align-items: center; */
+        & *{
+            width:100%;
+        }
+        
+    }
 `;
 export function OnlineUsers(props) {
    
@@ -63,28 +81,26 @@ export function OnlineUsers(props) {
     const users = props.users;
 
     return (
-        <Drawer>
-            {/* this toolbar on it's own makes space for one "line" */}
-            {/* Thisi s necessary because otherwise the header would cover it. */}
+      
             <DrawerContainer>
                 <Title>Online Users</Title>
-                <List container direction="column" alignItems="stretch">
+                <List>
                     {Object.keys(users).map(key => {
                         
                         if (key === yourID) {
                             return null;
                         }
                         return (
-                            <div key={key}>
+                            <li key={key}>
                                 <User name={users[key]}  callPeer={() => callPeer(key)} className="user" ></User>
-                            </div>
+                            </li>
                            
                             
                         );
                     })}
                 </List>
             </DrawerContainer>
-        </Drawer>
+       
     )
 }
 

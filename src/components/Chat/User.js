@@ -2,25 +2,55 @@ import React from 'react'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles, useTheme} from '@material-ui/core/styles'
-import Button from '@material-ui/core/Button';
 import ListItem from '@material-ui/core/ListItem';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
 import DropDownMenu from '../Utils/DropDownMenu.js';
+import styled ,{ withTheme} from 'styled-components';
 
-export default function User(props) {
-    const theme = useTheme();
-    const useStyles = makeStyles({
-        user:{
-            padding: 5,
-            margin: 2,
-            color: "white",
-            width: '240px',
-        },
+const DropDownStyle ={
+    color: "white",
+    display: "flex",
+    justifyContent: "center",
+    alignItems:"center",
+    backgroundColor: "blue"
+}
 
-    });
+const Body = styled.div`
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 50px;
+    margin: 0;
+    &:hover{
+        background-color: ${props => props.theme.colors.accent}
+    }
+`;
+const UserLayout = styled.div`
+   
+    display:grid;
+    grid-template-areas: 
+    "icon name";
+    justify-content: center;
+    align-content: center;
+    grid-column-gap: 1em;
+   
+  
+`;
+const IconContainer = styled.div`
+    grid-area: icon;
+    display: flex;
+    align-items: center;
+   
+`;
+const UserName = styled.div`
+    grid-area: name;
+    text-align:left;
+    display: flex;
+    align-items: center;
+`;
     
-    const classes = useStyles();
+
+function User(props) {
     const name = props.name;
     const callPeer = props.callPeer;
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -49,13 +79,29 @@ export default function User(props) {
 
     return (
         <DropDownMenu items={items}>
-            <ListItem button onClick={handleUserClick} >
+            {/* <ListItem button onClick={handleUserClick} >
                 <Grid className={classes.user} container spacing={2} align="center" justify="center">
                     <Grid item><AccountCircleIcon/></Grid>
                     <Grid item>{props.name}</Grid> 
                 </Grid>
                 
-            </ListItem>
+            </ListItem> */}
+                <Body>
+                    
+                    <UserLayout>
+                        <IconContainer>
+                            <AccountCircleIcon/>
+                        </IconContainer>
+                        <UserName>
+                            {props.name}
+                        </UserName>
+                    </UserLayout>
+
+                    
+                    
+                </Body>
+                
+           
             {/* <Menu
                 id="simple-menu"
                 anchorEl={anchorEl} //looks for this anchor to figure out where to display
@@ -71,3 +117,5 @@ export default function User(props) {
             
     )
 }
+
+export default withTheme(User);
