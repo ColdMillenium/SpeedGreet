@@ -1,4 +1,4 @@
-import React,  {useContext} from 'react'
+import React,  {useContext, useState, createRef} from 'react'
 import styled ,{ withTheme, keyframes} from 'styled-components';
 import {ClientContext} from '../../contexts/ClientContext'
 
@@ -103,26 +103,55 @@ const Input = styled.input`
         font-size: 1em;
         
     `
- function Chat(props) {
-    // const {
-        
-    // } = useContext(ClientContext);
+
+
+
+function Chat(props) {   
+    const {
+        sendMessage, 
+        chatUser, 
+        msgHistory
+    } = useContext(ClientContext);
+    const inputRef = createRef();
     const userName = "Andrew";
     const caller = "Lindsey";
+    const [message, setMessage] = useState('');
+    const disabled = chatUser === null;
+    function handleInputChange(){
+        if(inputRef.current!=null && inputRef.current.length > 0){
+            setMessage(inputRef.current.value);
+        }
+    }
+
+    function handleEnter(e){
+        if(e.keyCode === 13){
+            sendMessage(message, chatUser);
+        }
+        e.preventDefault();
+    }
+    let messages = []
+    if(msgHistory[chatUser]){
+        messages = msgHistory[chatUser].messages;
+    }
+    console.log(disabled);
     return (
         <ChatContainer>
             <MessageContainer>
                 <MessageList>
                     {
-                        testData.map(( msgData =>{
+                        messages.map(( msgData =>{
                             const fromUs = (msgData.from === userName);
                             return (<MessageItem key={msgData.time} fromUs={fromUs}>{msgData.msg}</MessageItem>)
                         }))
                     }
                 </MessageList>
             </MessageContainer>
-            <Input placeholder= "Send Message" disabled={props.disabled}></Input>
-            
+            <Input 
+                ref={inputRef} 
+                onkeydown={handleEnter} 
+                onChange={()=>{handleInputChange(inputRef)}} 
+                placeholder= "Send Message" 
+                disabled={disabled}></Input>
         </ChatContainer>
     )
 }
