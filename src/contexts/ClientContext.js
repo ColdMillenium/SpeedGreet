@@ -19,11 +19,13 @@ export default function ClientContextProvider(props) {
     const [canUpdateName, setCanUpdateName] = useState(false);
     const [signInError, setSignInError] = useState("");
     const [callEnding, setCallEnding] = useState(false);
+    const [msgHistory, setMsgHistory] = useState({});
+    const [chatUser, setChatUser] = useState('');
 
     const socket = useRef();
     useEffect(()=>{
-        
-        socket.current = io("https://meet-and-greet.herokuapp.com/", {
+        socket.current = io("http://localhost:5000"), {
+        // socket.current = io("https://meet-and-greet.herokuapp.com/", {
             reconnectionDelayMax: 10000,
             query: {
               auth: "123"
@@ -53,6 +55,26 @@ export default function ClientContextProvider(props) {
         socket.current.on("callerLeftCall", id =>{
             console.log(id + "leftcall");
             setCallEnding(true);
+        })
+        socket.current.on("serverSentMessage", data =>{
+            const history = {...msgHistory}
+            let user = data.users[1]; // your partner in chat. One of the users is 'you'
+            if(data.users[0] != yourID){
+                user = data.users[0];
+            }
+            //if we've been talking to the user and have a history 
+            // just update the messages
+            if(history[user] && history[user].msgHistoryId === data.msgHistoryId){
+                history[user].messages = data.messages
+                history[user].unread+=1;
+            }else{
+                history[user] = {
+                    messages: data.messages,
+                    msgHistoryId: data.msgHistoryId,
+                    unread :1,
+                }
+            }
+            setMsgHistory(history);
         })
         
     },[]);
@@ -94,6 +116,22 @@ export default function ClientContextProvider(props) {
         }
         socket.current.emit("yourUserName", name);
     }
+    function sendMessage(msg, recipientId){
+        let msgHistoryId = null;
+        if(!msgHistory[recipientId]){
+           msgHistoryId = msgHistory[recipientId].msgHistoryId;
+        }
+        socket.current.emit("clientSentMsg", {
+            msg: msg,
+            time: new Date().getTime(),
+            msgHistoryId: msgHistoryId,
+            to: recipientId,
+            from: yourID
+        });
+    }
+    // function removeMessages(NewUsers){
+    //     for
+    // }
     function callPeer(partnerId) {
         setCallerId(partnerId);
         navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(newStream => {
@@ -205,7 +243,10 @@ export default function ClientContextProvider(props) {
         userStream,
         notifyLeftCall,
         callEnding,
-        leaveCall
+        leaveCall,
+        setChatUser,
+        chatUser,
+        sendMessage
     }
     return (
         <ClientContext.Provider value ={value}>
