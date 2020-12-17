@@ -50,7 +50,7 @@ const GlobalStyle = createGlobalStyle`
   /* Works on Firefox */
   * {
     scrollbar-width: thin;
-    scrollbar-color: blue orange;
+    scrollbar-color: ${theme.colors.mid} ${theme.colors.dark};
   }
 
   /* Works on Chrome, Edge, and Safari */
@@ -59,13 +59,13 @@ const GlobalStyle = createGlobalStyle`
   }
 
   *::-webkit-scrollbar-track {
-    background: orange;
+    background: ${theme.colors.dark};
   }
 
   *::-webkit-scrollbar-thumb {
-    background-color: blue;
+    background-color: ${theme.colors.mid};
     border-radius: 20px;
-    border: 3px solid orange;
+    border: 3px solid ${theme.colors.dark};
   }
 `;
 
