@@ -24,7 +24,7 @@ export default function ClientContextProvider(props) {
 
     const socket = useRef();
     useEffect(()=>{
-        socket.current = io("http://localhost:5000"), {
+        socket.current = io("http://localhost:5000", {
         // socket.current = io("https://meet-and-greet.herokuapp.com/", {
             reconnectionDelayMax: 10000,
             query: {
