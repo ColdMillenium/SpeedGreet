@@ -1,6 +1,6 @@
 import React, {createRef, useState, useContext}from 'react'
 import { ClientContext } from '../../contexts/ClientContext'
-import { Button, TextField } from '@material-ui/core'
+// import { Button, TextField } from '@material-ui/core'
 import { makeStyles, useTheme} from '@material-ui/core/styles';
 import styled ,{ withTheme, keyframes} from 'styled-components';
 
@@ -12,6 +12,7 @@ import styled ,{ withTheme, keyframes} from 'styled-components';
         display: flex;
         flex-direction: column;
         justify-content:center;
+        text-align: center;
         align-items:center;
         box-sizing: border-box; //maybe should make global thing
 
@@ -71,11 +72,13 @@ import styled ,{ withTheme, keyframes} from 'styled-components';
         height: fit-content;
         width: fit-content;
         flex-direction: column;
-        padding: 20px;
+        padding: 50px;
+        gap: 10px;
         background-color: ${props => props.theme.colors.dark};
         /* background-color: #6ed87e; */
         /* color: ${props=> props.theme.colors.light}; */
-        color: #47cf73;
+        color: #EFEFEF;
+        border: 2px solid #2354C5;
         border-radius: 2px;
         /* border: solid 2px #6ed87e; */
         margin: 20px;
@@ -85,7 +88,8 @@ import styled ,{ withTheme, keyframes} from 'styled-components';
     `;
     const Label = styled.label`
         color: #47cf73;
-        margin-bottom: 20px;
+        padding-bottom: 5px;
+        margin-bottom: 0px;
         
     `;
     const ButtonWrapper = styled.div`
@@ -95,27 +99,52 @@ import styled ,{ withTheme, keyframes} from 'styled-components';
     const Error = styled.small`
         color: ${props => props.theme.colors.error};
     `;
+    const Header = styled.h2`
+        margin-bottom: 20px;
+    `;
 
     const UserName = styled.input`
-        color: #47cf73;
+        color: #929292;
         height: 3em;
         font-size: 1em;
         width: 100%;
+        text-align: center;
+        vertical-align: bottom;
         background-color: ${props => props.theme.colors.dark};
-        border-radius: 0.4rem;
-        border: solid 1px #20242b;
+        border: none;
+        border-bottom: 1px solid #929292;
         outline: none;
-        padding: 5px;
+        padding: 0px;
         /* padding: 5px; */
+        margin-bottom: 50px;
 
         &:focus {
-           border: solid 1px #47cf73;
+           border: none;
+           border-bottom: 1px solid #929292;
         };
 
         &::placeholder{
-            color: #47cf73;
+            text-align: bottom;
+            color: #929292;
             opacity: 0.3;
         };
+    `
+    const SignInBtn = styled.button`
+        cursor: pointer;
+        
+        border: 1px solid #5DBE30;
+        border-radius: 50px;
+        background-color: transparent;
+        padding: 10px 25px;
+        margin: 0 auto;
+        color: #5DBE30;
+        transition: all 0.1s ease-in;
+
+        &:hover{
+            color: #EFEFEF;
+            background-color: #5DBE30;
+            transform: scale(1.05);
+        }
     `
 
     
@@ -146,7 +175,9 @@ export function SignIn(props) {
                 </TitleWrapper>
                 
                 <SignInCard>
-                    <h1 >Sign In:</h1>
+                    <Header >Welcome Back</Header>
+                    <div><em>Select Username</em></div>
+                    <div></div>
                     {/* okay apparently you have to put input in like this... */}
                     {/* <TextField 
                         inputProps={{style: {color: theme.colors.dark}}} 
@@ -157,19 +188,21 @@ export function SignIn(props) {
                         variant="outlined" 
                     /> */}
                     <br/>
-                    <Label>
-                        Username:
+                    
                         <UserName 
                             ref={nameRef} 
                             onChange={(e) => updateUserName()} 
                             onKeyDown={(e) => textFieldEnter(e)}id="outlined-basic" 
                             placeholder="StevieWonder" 
                         />
-                    </Label>
+                   
                     
-                    <ButtonWrapper>
+                    {/* <ButtonWrapper>
                         <Button onClick={() => validateUserName(userName)} variant="contained" color="primary">SignIn</Button>
-                    </ButtonWrapper>
+                    </ButtonWrapper> */}
+                    <SignInBtn onClick={() => validateUserName(userName)}>
+                        Sign In
+                    </SignInBtn>
                 </SignInCard>
                 <Error >{signInError}</Error>
                    
