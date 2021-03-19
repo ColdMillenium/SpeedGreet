@@ -3,11 +3,19 @@ import Button from '@material-ui/core/Button'
 import './Chat.css'
 import {ClientContext} from '../../contexts/ClientContext'
 import Header from '../Header/Header'
-import OnlineUsers from './OnlineUsers';
+// import OnlineUsers from './OnlineUsers';
 import Toolbar from '@material-ui/core/Toolbar';
 import IncomingCall from '../IncomingCall/IncomingCall';
 import styled ,{ withTheme} from 'styled-components';
 import Chat from './Chat'
+import { Search } from '@material-ui/icons';
+// import { Divider } from '@material-ui/core';
+import randoDice from '../../assets/RandoDice.png';
+import userIcon from '../../assets/userIcon.svg';
+import msgSendBtn from '../../assets/msgSendBtn.png';
+
+
+
 
 
 const RemoteVideo = styled.video`
@@ -32,27 +40,255 @@ const ContentContainer = styled.div`
     overflow: hidden;
 `;
 
-const GridLayout = styled.div`
-    display: grid;
-    grid-template-areas: 
-    "users header"
-    "users chat"
-    "users chat" ;
-    grid-template-columns: 240px calc(100vw - 240px);
-    grid-template-rows: 40px auto 90px;
-    overflow: hidden;
-`;
-const HeaderContainer = styled.div`
-    grid-area: header;
+// const GridLayout = styled.div`
+//     display: grid;
+//     grid-template-areas: 
+//     "options users header"
+//     " options users chat"
+//     " options users chat" ;
+//     grid-template-columns: 50px 240px calc(100vw - 240px -50px);
+//     grid-template-rows: 40px auto 90px;
+//     overflow: hidden;
+// `;
+const Layout = styled.div`
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+`
+const SettingPanel = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #282C33;
+    height: 100%;
+    min-width: 80px;
 `;
 
-const ChatContainer = styled.div`
-    grid-area: chat;
+const UsersPanel = styled.div`
+    background-color: #303742;
+    min-width: 300px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+
 `;
-const UsersContainer = styled.div`
-    grid-area: users;
-    overflow-x: hidden;
+const SearchUsers = styled.div`
+    display: flex;
+  
+    
+    input{
+        width: 100%;
+        font-size: 18px;
+        background-color: #282C33;
+        border: none;
+        padding: 13px;
+        border-radius: 50px;
+        color: #929292;
+    }
+
+    input:focus{
+        outline: 0;
+
+    }
+    input:active{
+        border: none
+    }
+
 `;
+const OnlineUsersContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+`;
+const OnlineUser = styled.div`
+    display: flex;
+    flex-direction: row;
+    cursor: pointer;
+    transition: all 0.1s ease-in;
+    
+    color: #EFEFEF;
+    img{
+        height: 50px;
+        width: 50px;
+       
+        margin-right: 10px;
+    }
+    .info{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+    }
+    .info.name{
+        font-family: 'Roboto';
+        font-size: 18px;
+        font-weight: 300;
+    }
+    &:hover{
+        opacity: 0.6;
+    }
+`;
+const Tags = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+
+    .tag{
+        font-size: 12px;
+        padding: 3px 6px;
+        margin: 0 3px;
+        border-radius: 50px;
+       
+    }
+    .tag.first{
+        background-color:#EB5757 ;
+    }
+    .tag.second{
+        background-color:#F2994A ;
+    }
+    .tag.third{
+        background-color:#6FCF97;
+    }
+    
+`;
+
+const Divider = styled.div`
+    height: 1px;
+    background-color: #929292;
+    width: 100%;
+`;
+const RandoCall = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+    .rando-header{
+        font-size: 32px;
+        font-family: 'Montserrat';
+        font-weight: bold;
+      
+    }
+
+`;
+
+const MsgPanel = styled.div`
+    
+    position: relative;
+    background-color: #213048;
+    min-width: 300px;
+    width: 100%;
+`;
+const MsgHistory = styled.div`
+    
+    margin: auto;
+    height: calc(100% -75px);
+    padding: 0 30px;
+
+`;
+const ReceivedMsg = styled.div`
+    height: fit-content;
+    width: fit-content;
+    .from{
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 3px;
+    }
+    .name{
+        font-size: 24px;
+    }
+    .time{
+        font-size: 18px;
+        color: #929292;
+    }
+    .msg{
+        color: #213048;
+        background-color: #A3F0F0;
+        width: fit-content;
+        font-size: 18px;
+        padding: 20px;
+        border-radius: 0 30px 30px 30px;
+    }
+`;
+const SentMsg = styled(ReceivedMsg)`
+    margin: 0 0 0 auto;
+    .from{
+        justify-content: right;
+    }
+    .msg{
+        border-radius: 30px 0 30px 30px;
+        background-color: #9CE878;
+    }
+`;
+
+const MsgInput = styled.div`
+    position: absolute;
+    bottom: 0;
+    left:0;
+    right:0;
+    background: #EFEFEF;
+    height: 75px;
+  
+    padding: 0 10px 0 30px;
+    
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+
+
+    input{
+        color: #C4C4C4;
+        background: transparent;
+        border: none;
+        width: calc(100% - 40px);
+        
+    }
+    input:focus{
+        outline: 0;
+
+    }
+    input:active{
+        border: none
+    }
+    button{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        transition: all 0.1s ease;
+        height: 100%;
+        width: 40px
+    }
+    button:active{
+        transform: scale(0.9);
+        border: none;
+    }
+    button img{
+        height: 40px; 
+    }
+`;
+
+
+
+// const HeaderContainer = styled.div`
+//     grid-area: header;
+// `;
+
+// const ChatContainer = styled.div`
+//     grid-area: chat;
+// `;
+// const UsersContainer = styled.div`
+//     grid-area: users;
+//     overflow-x: hidden;
+// `;
+
+
 export function Train(props) {
     const {
         userName, 
@@ -66,13 +302,18 @@ export function Train(props) {
         partnerStream,
         notifyLeftCall,
         leaveCall,
-        callEnding
+        callEnding,
+        yourID
     } = useContext(ClientContext);
 
     const userVideoRef = useRef();
     const partnerVideoRef = useRef();
     const caller = users[callerId];
     
+    // let userList = [];
+    // for(let user of users ){
+    //     userList.push(<OnlineUser>{user}</OnlineUser>)
+    // }
     let userVideoWindow;
     if(callEnding){
         leaveCall();
@@ -136,22 +377,125 @@ export function Train(props) {
         }
     }
     return (
-            <GridLayout>
-                <HeaderContainer>
-                    <Header/>
-                </HeaderContainer>
-                <UsersContainer>
-                    <OnlineUsers users={users} callPeer={callPeer}></OnlineUsers>
-                </UsersContainer>   
-                {/* <VideoChatContainer> 
-                    <IncomingCall></IncomingCall>
-                    {partnerVideoWindow}
-                    {userVideoWindow}
-                </VideoChatContainer> */}
-                <ChatContainer>
-                    <Chat></Chat>
-                </ChatContainer>
-            </GridLayout>      
+        //old stuff
+            // <GridLayout>
+            //     <HeaderContainer>
+            //         <Header/>
+            //     </HeaderContainer>
+            //     <UsersContainer>
+            //         <OnlineUsers users={users} callPeer={callPeer}></OnlineUsers>
+            //     </UsersContainer>   
+            //     {/* <VideoChatContainer> 
+            //         <IncomingCall></IncomingCall>
+            //         {partnerVideoWindow}
+            //         {userVideoWindow}
+            //     </VideoChatContainer> */}
+            //     <ChatContainer>
+            //         <Chat></Chat>
+            //     </ChatContainer>
+            // </GridLayout>      
+
+        //new stuff
+        <Layout>
+            <SettingPanel>Hey</SettingPanel>
+            <UsersPanel>
+                <SearchUsers>
+                    <input type="text" placeholder="Search..."></input>
+                </SearchUsers>
+                <OnlineUsersContainer>
+                    {/* //3 placeholder users for UI DEV. REMOVE AFTER DONE! */}
+                    <OnlineUser>
+                        <img src={userIcon} className="icon"></img>
+                            <div className="info">
+                                <div className="name">Sarah</div>
+                                <Tags >
+                                    <div className="tag first">anime</div>
+                                    <div className="tag second">music</div>
+                                    <div className="tag third">gaming</div>
+                                </Tags>
+                        </div>
+                    </OnlineUser>
+                    <OnlineUser>
+                        <img src={userIcon} className="icon"></img>
+                            <div className="info">
+                                <div className="name">Sarah</div>
+                                <Tags >
+                                    <div className="tag first">anime</div>
+                                    <div className="tag second">music</div>
+                                    <div className="tag third">gaming</div>
+                                </Tags>
+                        </div>
+                    </OnlineUser>
+                    <OnlineUser>
+                        <img src={userIcon} className="icon"></img>
+                            <div className="info">
+                                <div className="name">Sarah</div>
+                                <Tags >
+                                    <div className="tag first">anime</div>
+                                    <div className="tag second">music</div>
+                                    <div className="tag third">gaming</div>
+                                </Tags>
+                        </div>
+                    </OnlineUser> 
+
+                    {/* //Generate users from server       */}
+                    {Object.keys(users).map(key => {
+                        if (key === yourID) {
+                            return null;
+                        }
+                        return (
+                            <OnlineUser key ={key} name={users[key]}  userId={key} callPeer={() => callPeer(key)} className="user" >
+                                <img src={userIcon} className="icon"></img>
+                                <div className="info">
+                                    <div className="name">{users[key]}</div>
+                                    <Tags >
+                                        <div className="className first">anime</div>
+                                        <div className="tag second">music</div>
+                                        <div className="tag third">gaming</div>
+                                    </Tags>
+                                </div>
+                            </OnlineUser>
+                        );
+                    })}
+                </OnlineUsersContainer>
+                <Divider></Divider>
+                <RandoCall>
+                    <div className="rando-header">Rando Call</div>
+                    <img src={randoDice} className="rando-btn">
+
+                    </img>
+                </RandoCall>
+
+            </UsersPanel>
+            <MsgPanel>
+                <MsgHistory>
+                    <ReceivedMsg>
+                        <div className="from">
+                            <div className="name">Cloe Fish</div>
+                            <div className="time"> @ 8:30pm</div>
+                        </div>
+                        <div className="msg">Dude...you're actually kind of an asshole</div>
+                    </ReceivedMsg>
+                    <SentMsg>
+                        <div className="from">
+                            <div className="name">John Doe</div>
+                            <div className="time"> @ 8:31pm</div>
+                        </div>
+                        <div className="msg">Hey, it was really nice to meet you</div>
+                    </SentMsg>
+                </MsgHistory>
+                <MsgInput>
+                    <input type="text"
+                        placeholder="Type something here to send..."
+                    />
+                    <button>
+                        <img src={msgSendBtn} alt=""></img>
+                    </button>
+                    
+                </MsgInput>
+               
+            </MsgPanel>
+        </Layout>  
     )
 }
 
