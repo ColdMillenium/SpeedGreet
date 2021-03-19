@@ -274,6 +274,43 @@ const MsgInput = styled.div`
     }
 `;
 
+function MsgPanelConent(chatUser, users){
+   if(chatUser === null){
+       return <MsgPanel ></MsgPanel>
+   }else{
+       return(
+        <MsgPanel>
+            <MsgHistory>
+                <div> - Chat History with {users[chatUser]} - </div>
+                <ReceivedMsg>
+                    <div className="from">
+                        <div className="name">Cloe Fish</div>
+                        <div className="time"> @ 8:30pm</div>
+                    </div>
+                    <div className="msg">Dude...you're actually kind of an asshole</div>
+                </ReceivedMsg>
+                <SentMsg>
+                    <div className="from">
+                        <div className="name">John Doe</div>
+                        <div className="time"> @ 8:31pm</div>
+                    </div>
+                    <div className="msg">Hey, it was really nice to meet you</div>
+                </SentMsg>
+            </MsgHistory>
+            <MsgInput>
+                <input type="text"
+                    placeholder="Type something here to send..."
+                />
+                <button>
+                    <img src={msgSendBtn} alt=""></img>
+                </button>
+                
+            </MsgInput>
+        </MsgPanel>
+       )
+   }
+}
+
 
 
 // const HeaderContainer = styled.div`
@@ -303,7 +340,9 @@ export function Train(props) {
         notifyLeftCall,
         leaveCall,
         callEnding,
-        yourID
+        yourID,
+        setChatUser,
+        chatUser,
     } = useContext(ClientContext);
 
     const userVideoRef = useRef();
@@ -444,7 +483,13 @@ export function Train(props) {
                             return null;
                         }
                         return (
-                            <OnlineUser key ={key} name={users[key]}  userId={key} callPeer={() => callPeer(key)} className="user" >
+                            <OnlineUser 
+                                key ={key} 
+                                name={users[key]}  
+                                userId={key} 
+                                callPeer={() => callPeer(key)} className="user"
+                                onClick={() =>setChatUser(key)}
+                            >
                                 <img src={userIcon} className="icon"></img>
                                 <div className="info">
                                     <div className="name">{users[key]}</div>
@@ -467,34 +512,7 @@ export function Train(props) {
                 </RandoCall>
 
             </UsersPanel>
-            <MsgPanel>
-                <MsgHistory>
-                    <ReceivedMsg>
-                        <div className="from">
-                            <div className="name">Cloe Fish</div>
-                            <div className="time"> @ 8:30pm</div>
-                        </div>
-                        <div className="msg">Dude...you're actually kind of an asshole</div>
-                    </ReceivedMsg>
-                    <SentMsg>
-                        <div className="from">
-                            <div className="name">John Doe</div>
-                            <div className="time"> @ 8:31pm</div>
-                        </div>
-                        <div className="msg">Hey, it was really nice to meet you</div>
-                    </SentMsg>
-                </MsgHistory>
-                <MsgInput>
-                    <input type="text"
-                        placeholder="Type something here to send..."
-                    />
-                    <button>
-                        <img src={msgSendBtn} alt=""></img>
-                    </button>
-                    
-                </MsgInput>
-               
-            </MsgPanel>
+            {MsgPanelConent(chatUser, users)}
         </Layout>  
     )
 }
