@@ -92,7 +92,7 @@ export function OnlineUsers(props) {
                         }
                         return (
                             <li key={key}>
-                                <User name={users[key]}  callPeer={() => callPeer(key)} className="user" ></User>
+                                <User name={users[key]}  userId={key} callPeer={() => callPeer(key)} className="user" ></User>
                             </li>
                         );
                     })}

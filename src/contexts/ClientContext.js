@@ -1,7 +1,8 @@
-import React, {createContext, useState, useRef, useEffect} from 'react'
+import React, {createContext, useState, useRef, useEffect, useCallback} from 'react'
 import io from "socket.io-client";
 import Peer from "simple-peer";
 import { keyframes } from 'styled-components';
+import { YouTube } from '@material-ui/icons';
 
 export const ClientContext = createContext();
 export default function ClientContextProvider(props) {
@@ -20,7 +21,11 @@ export default function ClientContextProvider(props) {
     const [signInError, setSignInError] = useState("");
     const [callEnding, setCallEnding] = useState(false);
     const [msgHistory, setMsgHistory] = useState({});
-    const [chatUser, setChatUser] = useState('');
+    const [chatUser, setChatUser] = useState(null);
+    const [newMessage, setNewMessage ] = useState({});
+    const [rooms, setRooms] = useState({});
+    const [conversations, setConversations] = useState([]);
+
 
     const socket = useRef();
     useEffect(()=>{
@@ -38,6 +43,19 @@ export default function ClientContextProvider(props) {
         })
         socket.current.on("allUsers", (users) => {
             setUsers(users);
+            if(yourID === null){
+                return;
+            }
+            const newRooms = rooms;
+            Object.keys(users).forEach(key =>{
+                if(key === yourID){
+                    return;
+                }
+                if(newRooms[key] === undefined || newRooms[key] === null){
+                    newRooms[key] = []
+                    setRooms(newRooms);
+                }
+            })
         })
         socket.current.on("hey", (data) => {
             setReceivingCall(true);
@@ -56,28 +74,77 @@ export default function ClientContextProvider(props) {
             console.log(id + "leftcall");
             setCallEnding(true);
         })
-        socket.current.on("serverSentMessage", data =>{
-            const history = {...msgHistory}
-            let user = data.users[1]; // your partner in chat. One of the users is 'you'
-            if(data.users[0] != yourID){
-                user = data.users[0];
-            }
-            //if we've been talking to the user and have a history 
-            // just update the messages
-            if(history[user] && history[user].msgHistoryId === data.msgHistoryId){
-                history[user].messages = data.messages
-                history[user].unread+=1;
-            }else{
-                history[user] = {
-                    messages: data.messages,
-                    msgHistoryId: data.msgHistoryId,
-                    unread :1,
-                }
-            }
-            setMsgHistory(history);
-        })
+        // socket.current.on("serverSentMessage", data =>{ 
+        //     console.log(users);
+        //    setNewMessage(data);
+        // })
         
     },[]);
+
+    function createConversation(recipients){
+        setConversations(prevConversations => {
+            return [...prevConversations, { recipients, messages: [] }]
+        })
+    }
+    function getConversationMessages(recipients){
+        let messages = null
+        conversations.forEach(c => {
+            if(arrayEquality(c.recipients, recipients)){
+                messages = c.messages;
+            }
+        })
+        return messages;
+
+    }
+    const addMessageToConversation = useCallback(({recipients, msg}) =>{
+        setConversations(prevConversations =>{
+            console.log("Receiving Message");
+            let madeChange = false;
+            const newConversations = prevConversations.map(conversation => {
+                if(arrayEquality(conversation.recipients, recipients)){
+                    madeChange = true;
+                    return {
+                        ...conversation,
+                        messages: [...conversation.messages, msg]
+                    }
+                }
+
+                return conversation;
+            })
+
+            if(madeChange){
+                return newConversations
+            }else{
+                return [
+                    ...prevConversations,
+                    {recipients, messages: [msg]}
+                ]
+            }
+        })
+
+        
+    }, [setConversations])
+
+    function arrayEquality(a, b) {
+        if (a.length !== b.length) return false
+      
+        a.sort()
+        b.sort()
+      
+        return a.every((element, index) => {
+          return element === b[index]
+        })
+      }
+
+    useEffect(()=>{
+        if(socket.current == null) return;
+
+       
+       
+            socket.current.on("receive-message", addMessageToConversation)
+        
+        return () => socket.current.off('receive-message')
+    }, [yourID])
 
     function callUser(data){
         //the data contains and id, which to whom the call is for
@@ -116,21 +183,65 @@ export default function ClientContextProvider(props) {
         }
         socket.current.emit("yourUserName", name);
     }
-    function sendMessage(msg, recipientId){
-        let msgHistoryId = null;
-        if(!msgHistory[recipientId]){
-           msgHistoryId = msgHistory[recipientId].msgHistoryId;
-        }
-        socket.current.emit("clientSentMsg", {
-            msg: msg,
-            time: new Date().getTime(),
-            msgHistoryId: msgHistoryId,
-            to: recipientId,
-            from: yourID
-        });
+    // function sendMessage(msg, recipientId){
+    //     let msgHistoryId = null;
+    //     if(msgHistory[recipientId]){
+    //        msgHistoryId = msgHistory[recipientId].msgHistoryId;
+    //     }
+    //     socket.current.emit("clientSentMessage", {
+    //         msg: msg,
+    //         time: new Date().getTime(),
+    //         msgHistoryId: msgHistoryId,
+    //         to: recipientId,
+    //         from: yourID
+    //     });
+    // }
+
+    function sendMessage(recipients, text) {
+        const currentDate = new Date();
+        const time = currentDate.getHours() + ":" + currentDate.getMinutes() + ":" + currentDate.getSeconds();
+        const msg = {text: text, sender: yourID, time:time}
+        socket.current.emit('send-message', { recipients, msg})
+
+        addMessageToConversation({ recipients, msg})
     }
-    // function removeMessages(NewUsers){
-    //     for
+    
+    function getMsgHistory(){
+        if(msgHistory[chatUser]){
+            return msgHistory[chatUser];
+        }else{
+            return null;
+        }
+    }
+    //tells other users they need to setup a room for chat.
+    function setupRoom(users){
+        socket.current.emit("setupRoom", users);
+    }
+    // function updateMsgHistory(data){
+    //     const history = {...msgHistory}
+    //     let user = data.users[1]; // your partner in chat. One of the users is 'you'
+    //     console.log(data.users);
+    //     if(data.users[0] != yourID){
+    //         user = data.users[0];
+    //     }
+    //     if(data.from != yourID){
+    //         console.log( users[user] + "sent you a message!");
+    //     }else{
+    //         console.log("you sent " + users[user] + " a message!");
+    //     }
+    //     //if we've been talking to the user and have a history 
+    //     // just update the messages
+    //     if(history[user] && history[user].msgHistoryId === data.msgHistoryId){
+    //         history[user].messages = data.messages
+    //         history[user].unread+=1;
+    //     }else{
+    //         history[user] = {
+    //             messages: data.messages,
+    //             msgHistoryId: data.msgHistoryId,
+    //             unread :1,
+    //         }
+    //     }
+    //     setNewMessage(null);
     // }
     function callPeer(partnerId) {
         setCallerId(partnerId);
@@ -246,7 +357,16 @@ export default function ClientContextProvider(props) {
         leaveCall,
         setChatUser,
         chatUser,
-        sendMessage
+        sendMessage,
+        msgHistory,
+        newMessage,
+        setNewMessage,
+        rooms,
+        setRooms,
+        conversations,
+        createConversation,
+        getConversationMessages,
+       
     }
     return (
         <ClientContext.Provider value ={value}>

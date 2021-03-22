@@ -1,10 +1,8 @@
-import React from 'react'
+import React , {useContext} from 'react'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import Grid from '@material-ui/core/Grid';
-import { makeStyles, useTheme} from '@material-ui/core/styles'
-import ListItem from '@material-ui/core/ListItem';
 import DropDownMenu from '../Utils/DropDownMenu.js';
 import styled ,{ withTheme} from 'styled-components';
+import {ClientContext} from '../../contexts/ClientContext'
 
 const DropDownStyle ={
     color: "white",
@@ -53,6 +51,8 @@ const UserName = styled.div`
 function User(props) {
     const name = props.name;
     const callPeer = props.callPeer;
+    const userId = props.userId;
+    const {setChatUser } = useContext(ClientContext);
     const [anchorEl, setAnchorEl] = React.useState(null);
 
     
@@ -66,6 +66,7 @@ function User(props) {
     };
     const handleChat = ()=>{
         //do something
+        setChatUser(userId);
         handleClose();
     }
     const handleClose = () => {

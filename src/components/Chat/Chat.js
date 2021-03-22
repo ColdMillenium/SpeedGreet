@@ -103,44 +103,62 @@ const Input = styled.input`
         font-size: 1em;
         
     `
-
+const StartMessageContainer = styled.div`
+    margin: 1em 0px;
+    padding: 0;
+`
 
 
 function Chat(props) {   
     const {
         sendMessage, 
         chatUser, 
-        msgHistory
+        msgHistory,
+        users,
+        yourID
     } = useContext(ClientContext);
     const inputRef = createRef();
     const userName = "Andrew";
     const caller = "Lindsey";
     const [message, setMessage] = useState('');
     const disabled = chatUser === null;
-    function handleInputChange(){
-        if(inputRef.current!=null && inputRef.current.length > 0){
+    function handleInputChange(e){
+        if(inputRef.current!=null){
+            inputRef.current = 
             setMessage(inputRef.current.value);
+            console.log(message);
         }
     }
 
     function handleEnter(e){
         if(e.keyCode === 13){
+            console.log("enter zawarudo!")
             sendMessage(message, chatUser);
+            inputRef.current.value = '';
         }
-        e.preventDefault();
+    }
+    let startingMsg = "<---- Pst. Click on a user to start a chat or call :)";
+    if(!disabled){
+        startingMsg = "The is the start of your chat with " + users[chatUser];
     }
     let messages = []
     if(msgHistory[chatUser]){
         messages = msgHistory[chatUser].messages;
+        console.log(messages);
     }
     console.log(disabled);
     return (
         <ChatContainer>
             <MessageContainer>
+                <StartMessageContainer>
+                    {startingMsg}
+                </StartMessageContainer>
                 <MessageList>
+
+                    
                     {
                         messages.map(( msgData =>{
-                            const fromUs = (msgData.from === userName);
+                            const fromUs = (msgData.from === yourID);
                             return (<MessageItem key={msgData.time} fromUs={fromUs}>{msgData.msg}</MessageItem>)
                         }))
                     }
@@ -148,12 +166,19 @@ function Chat(props) {
             </MessageContainer>
             <Input 
                 ref={inputRef} 
-                onkeydown={handleEnter} 
-                onChange={()=>{handleInputChange(inputRef)}} 
+                onKeyDown={(e)=> {handleEnter(e)} }
+                onChange={(e)=>{handleInputChange(e)}} 
                 placeholder= "Send Message" 
-                disabled={disabled}></Input>
+                disabled={chatUser === null}
+            />
         </ChatContainer>
     )
 }
+{/* <UserName 
+ref={nameRef} 
+onChange={(e) => updateUserName()} 
+onKeyDown={(e) => textFieldEnter(e)}id="outlined-basic" 
+placeholder="StevieWonder" 
+/> */}
 
 export default withTheme(Chat);

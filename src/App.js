@@ -72,8 +72,11 @@ const GlobalStyle = createGlobalStyle`
     
     
 export default function App(){
-  const {confirmUserName, hasUserName} = useContext(ClientContext);
-  
+  const {confirmUserName, hasUserName, newMessage, updateMsgHistory, setNewMessage} = useContext(ClientContext);
+    if(newMessage!=null){
+      // updateMsgHistory(newMessage);
+      
+    }
 
     return (
     <Fragment>

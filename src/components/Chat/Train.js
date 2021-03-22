@@ -8,11 +8,12 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IncomingCall from '../IncomingCall/IncomingCall';
 import styled ,{ withTheme} from 'styled-components';
 import Chat from './Chat'
-import { Search } from '@material-ui/icons';
+import { AirlineSeatLegroomExtraSharp, Search } from '@material-ui/icons';
 // import { Divider } from '@material-ui/core';
 import randoDice from '../../assets/RandoDice.png';
 import userIcon from '../../assets/userIcon.svg';
 import msgSendBtn from '../../assets/msgSendBtn.png';
+import MsgPanelContent from './MsgPanelContent'
 
 
 
@@ -274,14 +275,37 @@ const MsgInput = styled.div`
     }
 `;
 
-function MsgPanelConent(chatUser, users){
-   if(chatUser === null){
-       return <MsgPanel ></MsgPanel>
+function MsgPanelConent(props){
+    const [message, setMessage] = useState('');
+    let history = [];
+    console.log(props);
+
+  
+    const inputRef = createRef();
+    function handleInputChange(e){
+        if(inputRef.current!=null){
+            // inputRef.current = 
+            setMessage(inputRef.current.value);
+            console.log(message);
+        }
+    }
+
+    function handleEnter(e){
+        if(e.keyCode === 13){
+            console.log("enter zawarudo!")
+            props.sendMessage(message, props.chatUser);
+            inputRef.current.value = '';
+        }
+    }
+   if(props.chatUser === null || props.rooms[props.chatUser] === null){
+       return <MsgPanel >{props.currentRoom}</MsgPanel>
    }else{
+       
+    //    const history = props.rooms[props.chatUser].history;
        return(
         <MsgPanel>
             <MsgHistory>
-                <div> - Chat History with {users[chatUser]} - </div>
+                <div> - Chat History with {props.users[props.chatUser]} - </div>
                 <ReceivedMsg>
                     <div className="from">
                         <div className="name">Cloe Fish</div>
@@ -296,9 +320,16 @@ function MsgPanelConent(chatUser, users){
                     </div>
                     <div className="msg">Hey, it was really nice to meet you</div>
                 </SentMsg>
+                {history.forEach((text, index)=>{
+                    return <div key={index}>{text.msg}</div>
+                })}
             </MsgHistory>
             <MsgInput>
-                <input type="text"
+                <input 
+                    ref={inputRef}
+                    type="text"
+                    onKeyDown={(e)=> {handleEnter(e)} }
+                    onChange={(e)=>{handleInputChange(e)}} 
                     placeholder="Type something here to send..."
                 />
                 <button>
@@ -343,11 +374,16 @@ export function Train(props) {
         yourID,
         setChatUser,
         chatUser,
+        sendMessage,
+        rooms,
+        setRooms,
     } = useContext(ClientContext);
 
     const userVideoRef = useRef();
     const partnerVideoRef = useRef();
     const caller = users[callerId];
+    
+    
     
     // let userList = [];
     // for(let user of users ){
@@ -415,6 +451,21 @@ export function Train(props) {
             )
         }
     }
+    let handleUserSelect = (id)=>{
+        console.log(id);
+        if(rooms.hasOwnProperty(id)){
+
+            const newRoom = rooms;
+            newRoom[id] = [];
+            setRooms(newRoom);
+            console.log("new room needed for talking to " + id);
+        }else{
+            console.log(rooms);
+        }
+        setChatUser(id);
+        console.log("oh yeah>");
+    }
+
     return (
         //old stuff
             // <GridLayout>
@@ -488,7 +539,7 @@ export function Train(props) {
                                 name={users[key]}  
                                 userId={key} 
                                 callPeer={() => callPeer(key)} className="user"
-                                onClick={() =>setChatUser(key)}
+                                onClick={() =>handleUserSelect(key)}
                             >
                                 <img src={userIcon} className="icon"></img>
                                 <div className="info">
@@ -512,7 +563,12 @@ export function Train(props) {
                 </RandoCall>
 
             </UsersPanel>
-            {MsgPanelConent(chatUser, users)}
+            <MsgPanelContent 
+                chatUser={chatUser} 
+                users={users}
+                sendMessage={sendMessage}
+                rooms={rooms}
+            ></MsgPanelContent>
         </Layout>  
     )
 }

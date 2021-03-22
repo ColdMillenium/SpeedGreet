@@ -7,7 +7,7 @@ import UserHeader from './UserHeader';
 
 export default function MainMenuPage() {
     const {userName, hasUserName} = useContext(ClientContext);
-    const backgroundVideo = "assets/people-talking-table.mp4"
+    const backgroundVideo = "../../../assets/people-talking-table.mp4"
     const vidConfig = {file:{attributes:{}}};
     function display(){
         if(hasUserName){
