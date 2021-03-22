@@ -25,8 +25,9 @@ const MsgPanel = styled.div`
 const MsgHistory = styled.div`
     
     margin: auto;
-    height: calc(100% -75px);
+    height: calc(100% - 75px);
     padding: 0 30px;
+    overflow-y: auto;
 
 `;
 const ReceivedMsg = styled.div`
@@ -187,7 +188,7 @@ export function MsgPanelContent(){
         <MsgPanel>
             <MsgHistory>
                 <div> - Chat History with {users[chatUser]} - </div>
-                <div>oh hi{Object.keys(rooms).length} mark</div>
+                
                 <ReceivedMsg>
                     <div className="from">
                         <div className="name">Cloe Fish</div>
@@ -202,12 +203,133 @@ export function MsgPanelContent(){
                     </div>
                     <div className="msg">Hey, it was really nice to meet you</div>
                 </SentMsg>
-                And so it begins
+                <ReceivedMsg>
+                    <div className="from">
+                        <div className="name">Cloe Fish</div>
+                        <div className="time"> @ 8:30pm</div>
+                    </div>
+                    <div className="msg">Dude...you're actually kind of an asshole</div>
+                </ReceivedMsg>
+                <SentMsg>
+                    <div className="from">
+                        <div className="name">John Doe</div>
+                        <div className="time"> @ 8:31pm</div>
+                    </div>
+                    <div className="msg">Hey, it was really nice to meet you</div>
+                </SentMsg>
+                <ReceivedMsg>
+                    <div className="from">
+                        <div className="name">Cloe Fish</div>
+                        <div className="time"> @ 8:30pm</div>
+                    </div>
+                    <div className="msg">Dude...you're actually kind of an asshole</div>
+                </ReceivedMsg>
+                <SentMsg>
+                    <div className="from">
+                        <div className="name">John Doe</div>
+                        <div className="time"> @ 8:31pm</div>
+                    </div>
+                    <div className="msg">Hey, it was really nice to meet you</div>
+                </SentMsg>
+                <ReceivedMsg>
+                    <div className="from">
+                        <div className="name">Cloe Fish</div>
+                        <div className="time"> @ 8:30pm</div>
+                    </div>
+                    <div className="msg">Dude...you're actually kind of an asshole</div>
+                </ReceivedMsg>
+                <SentMsg>
+                    <div className="from">
+                        <div className="name">John Doe</div>
+                        <div className="time"> @ 8:31pm</div>
+                    </div>
+                    <div className="msg">Hey, it was really nice to meet you</div>
+                </SentMsg><ReceivedMsg>
+                    <div className="from">
+                        <div className="name">Cloe Fish</div>
+                        <div className="time"> @ 8:30pm</div>
+                    </div>
+                    <div className="msg">Dude...you're actually kind of an asshole</div>
+                </ReceivedMsg>
+                <SentMsg>
+                    <div className="from">
+                        <div className="name">John Doe</div>
+                        <div className="time"> @ 8:31pm</div>
+                    </div>
+                    <div className="msg">Hey, it was really nice to meet you</div>
+                </SentMsg>
+                <ReceivedMsg>
+                    <div className="from">
+                        <div className="name">Cloe Fish</div>
+                        <div className="time"> @ 8:30pm</div>
+                    </div>
+                    <div className="msg">Dude...you're actually kind of an asshole</div>
+                </ReceivedMsg>
+                <SentMsg>
+                    <div className="from">
+                        <div className="name">John Doe</div>
+                        <div className="time"> @ 8:31pm</div>
+                    </div>
+                    <div className="msg">Hey, it was really nice to meet you</div>
+                </SentMsg>
+                <ReceivedMsg>
+                    <div className="from">
+                        <div className="name">Cloe Fish</div>
+                        <div className="time"> @ 8:30pm</div>
+                    </div>
+                    <div className="msg">Dude...you're actually kind of an asshole</div>
+                </ReceivedMsg>
+                <SentMsg>
+                    <div className="from">
+                        <div className="name">John Doe</div>
+                        <div className="time"> @ 8:31pm</div>
+                    </div>
+                    <div className="msg">Hey, it was really nice to meet you</div>
+                </SentMsg>
+                <ReceivedMsg>
+                    <div className="from">
+                        <div className="name">Cloe Fish</div>
+                        <div className="time"> @ 8:30pm</div>
+                    </div>
+                    <div className="msg">Dude...you're actually kind of an asshole</div>
+                </ReceivedMsg>
+                <SentMsg>
+                    <div className="from">
+                        <div className="name">John Doe</div>
+                        <div className="time"> @ 8:31pm</div>
+                    </div>
+                    <div className="msg">Hey, it was really nice to meet you</div>
+                </SentMsg>
+                <ReceivedMsg>
+                    <div className="from">
+                        <div className="name">Cloe Fish</div>
+                        <div className="time"> @ 8:30pm</div>
+                    </div>
+                    <div className="msg">Dude...you're actually kind of an asshole</div>
+                </ReceivedMsg>
+                <SentMsg>
+                    <div className="from">
+                        <div className="name">John Doe</div>
+                        <div className="time"> @ 8:31pm</div>
+                    </div>
+                    <div className="msg">Hey, it was really nice to meet you</div>
+                </SentMsg>
+                <ReceivedMsg>
+                    <div className="from">
+                        <div className="name">Cloe Fish</div>
+                        <div className="time"> @ 8:30pm</div>
+                    </div>
+                    <div className="msg">Dude...you're actually kind of an asshole</div>
+                </ReceivedMsg>
+                <SentMsg>
+                    <div className="from">
+                        <div className="name">John Doe</div>
+                        <div className="time"> @ 8:31pm</div>
+                    </div>
+                    <div className="msg">Hey, it was really nice to meet you</div>
+                </SentMsg>
                 <ShowHistory></ShowHistory>
-                {/* {rooms[chatUser].forEach((text, index)=>{
-                    return <div key={index}>{text.msg}</div>
-                })} */}
-                and ends
+             
             </MsgHistory>
             <MsgInput>
                 <input 
