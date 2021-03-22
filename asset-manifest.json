@@ -1,24 +1,28 @@
 {
   "files": {
     "main.css": "/SpeedGreet/static/css/main.0dccd757.chunk.css",
-    "main.js": "/SpeedGreet/static/js/main.a89815cf.chunk.js",
-    "main.js.map": "/SpeedGreet/static/js/main.a89815cf.chunk.js.map",
+    "main.js": "/SpeedGreet/static/js/main.0f0f954a.chunk.js",
+    "main.js.map": "/SpeedGreet/static/js/main.0f0f954a.chunk.js.map",
     "runtime-main.js": "/SpeedGreet/static/js/runtime-main.42c989bf.js",
     "runtime-main.js.map": "/SpeedGreet/static/js/runtime-main.42c989bf.js.map",
-    "static/js/2.db49d1c3.chunk.js": "/SpeedGreet/static/js/2.db49d1c3.chunk.js",
-    "static/js/2.db49d1c3.chunk.js.map": "/SpeedGreet/static/js/2.db49d1c3.chunk.js.map",
+    "static/js/2.14684deb.chunk.js": "/SpeedGreet/static/js/2.14684deb.chunk.js",
+    "static/js/2.14684deb.chunk.js.map": "/SpeedGreet/static/js/2.14684deb.chunk.js.map",
     "index.html": "/SpeedGreet/index.html",
-    "precache-manifest.4d17199e20b569631a8bcd2f5d14d5ea.js": "/SpeedGreet/precache-manifest.4d17199e20b569631a8bcd2f5d14d5ea.js",
+    "precache-manifest.cb029c84d4c4c25fd946ae62e8798a57.js": "/SpeedGreet/precache-manifest.cb029c84d4c4c25fd946ae62e8798a57.js",
     "service-worker.js": "/SpeedGreet/service-worker.js",
     "static/css/main.0dccd757.chunk.css.map": "/SpeedGreet/static/css/main.0dccd757.chunk.css.map",
-    "static/js/2.db49d1c3.chunk.js.LICENSE.txt": "/SpeedGreet/static/js/2.db49d1c3.chunk.js.LICENSE.txt",
+    "static/js/2.14684deb.chunk.js.LICENSE.txt": "/SpeedGreet/static/js/2.14684deb.chunk.js.LICENSE.txt",
+    "static/media/RandoDice.png": "/SpeedGreet/static/media/RandoDice.ec1b1592.png",
+    "static/media/back-btn.svg": "/SpeedGreet/static/media/back-btn.8279aa1a.svg",
     "static/media/MainMenuOptions.css": "/SpeedGreet/static/media/custom-cursor.d4f982fa.png",
-    "static/media/logo.svg": "/SpeedGreet/static/media/logo.5d5d9eef.svg"
+    "static/media/logo.svg": "/SpeedGreet/static/media/logo.5d5d9eef.svg",
+    "static/media/settings-btn.svg": "/SpeedGreet/static/media/settings-btn.012a2fb6.svg",
+    "static/media/userIcon.svg": "/SpeedGreet/static/media/userIcon.7221219d.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.42c989bf.js",
-    "static/js/2.db49d1c3.chunk.js",
+    "static/js/2.14684deb.chunk.js",
     "static/css/main.0dccd757.chunk.css",
-    "static/js/main.a89815cf.chunk.js"
+    "static/js/main.0f0f954a.chunk.js"
   ]
 }
