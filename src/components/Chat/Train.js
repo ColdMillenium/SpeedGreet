@@ -103,6 +103,8 @@ const OnlineUsersContainer = styled.div`
     flex-direction: column;
     align-items: center;
     gap: 20px;
+    height: 100%;
+    overflow-y: auto;
 `;
 const OnlineUser = styled.div`
     display: flex;
@@ -493,41 +495,6 @@ export function Train(props) {
                     <input type="text" placeholder="Search..."></input>
                 </SearchUsers>
                 <OnlineUsersContainer>
-                    {/* //3 placeholder users for UI DEV. REMOVE AFTER DONE! */}
-                    <OnlineUser>
-                        <img src={userIcon} className="icon"></img>
-                            <div className="info">
-                                <div className="name">Sarah</div>
-                                <Tags >
-                                    <div className="tag first">anime</div>
-                                    <div className="tag second">music</div>
-                                    <div className="tag third">gaming</div>
-                                </Tags>
-                        </div>
-                    </OnlineUser>
-                    <OnlineUser>
-                        <img src={userIcon} className="icon"></img>
-                            <div className="info">
-                                <div className="name">Sarah</div>
-                                <Tags >
-                                    <div className="tag first">anime</div>
-                                    <div className="tag second">music</div>
-                                    <div className="tag third">gaming</div>
-                                </Tags>
-                        </div>
-                    </OnlineUser>
-                    <OnlineUser>
-                        <img src={userIcon} className="icon"></img>
-                            <div className="info">
-                                <div className="name">Sarah</div>
-                                <Tags >
-                                    <div className="tag first">anime</div>
-                                    <div className="tag second">music</div>
-                                    <div className="tag third">gaming</div>
-                                </Tags>
-                        </div>
-                    </OnlineUser> 
-
                     {/* //Generate users from server       */}
                     {Object.keys(users).map(key => {
                         if (key === yourID) {
