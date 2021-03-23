@@ -17,6 +17,7 @@ import settingsBtn from '../../assets/settings-btn.svg';
 import backBtn from '../../assets/back-btn.svg'
 import msgSendBtn from '../../assets/msgSendBtn.png';
 import MsgPanelContent from './MsgPanelContent'
+import UsersPanel from './UsersPanel'
 
 
 
@@ -77,15 +78,15 @@ const SettingPanel = styled.div`
     }
 `;
 
-const UsersPanel = styled.div`
-    background-color: #303742;
-    min-width: 300px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 50px;
+// const UsersPanel = styled.div`
+//     background-color: #303742;
+//     min-width: 300px;
+//     padding: 20px;
+//     display: flex;
+//     flex-direction: column;
+//     gap: 50px;
 
-`;
+// `;
 const SearchUsers = styled.div`
     display: flex;
   
@@ -298,24 +299,7 @@ export function Train(props) {
     }
 
     return (
-            // <GridLayout>
-            //     <HeaderContainer>
-            //         <Header/>
-            //     </HeaderContainer>
-            //     <UsersContainer>
-            //         <OnlineUsers users={users} callPeer={callPeer}></OnlineUsers>
-            //     </UsersContainer>   
-            //     <VideoChatContainer> 
-            //         <IncomingCall></IncomingCall>
-            //         {partnerVideoWindow}
-            //         {userVideoWindow}
-            //     </VideoChatContainer>
-            //     <ChatContainer>
-            //         <Chat></Chat>
-            //     </ChatContainer>
-            // </GridLayout>      
-
-        //new stuff
+          
         <Layout>
             {partnerVideoWindow}
                {userVideoWindow}
@@ -324,55 +308,13 @@ export function Train(props) {
                 <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="sign-out-alt" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-sign-out-alt fa-w-16 fa-3x"><path fill="currentColor" d="M497 273L329 441c-15 15-41 4.5-41-17v-96H152c-13.3 0-24-10.7-24-24v-96c0-13.3 10.7-24 24-24h136V88c0-21.4 25.9-32 41-17l168 168c9.3 9.4 9.3 24.6 0 34zM192 436v-40c0-6.6-5.4-12-12-12H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32h84c6.6 0 12-5.4 12-12V76c0-6.6-5.4-12-12-12H96c-53 0-96 43-96 96v192c0 53 43 96 96 96h84c6.6 0 12-5.4 12-12z" class=""></path></svg>
                 <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="sliders-h" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-sliders-h fa-w-16 fa-5x"><path fill="currentColor" d="M496 384H160v-16c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v16H16c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h80v16c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-16h336c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16zm0-160h-80v-16c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v16H16c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h336v16c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-16h80c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16zm0-160H288V48c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v16H16C7.2 64 0 71.2 0 80v32c0 8.8 7.2 16 16 16h208v16c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-16h208c8.8 0 16-7.2 16-16V80c0-8.8-7.2-16-16-16z" class=""></path></svg>
             </SettingPanel>
-            <UsersPanel>
-                <SearchUsers>
-                    <input type="text" placeholder="Search..."></input>
-                </SearchUsers>
-                <OnlineUsersContainer>
-                    {/* //Generate users from server       */}
-                    {Object.keys(users).map(key => {
-                        if (key === yourID) {
-                            return null;
-                        }
-                        return (
-                            <OnlineUser 
-                                key ={key} 
-                                name={users[key]}  
-                                userId={key} 
-                                callPeer={() => callPeer(key)} className="user"
-                                onClick={() =>handleUserSelect(key)}
-                            >
-                                <img src={userIcon} className="icon"></img>
-                                <div className="info">
-                                    <div className="name">{users[key]}</div>
-                                    <Tags >
-                                        <div className="className first">anime</div>
-                                        <div className="tag second">music</div>
-                                        <div className="tag third">gaming</div>
-                                    </Tags>
-                                </div>
-                            </OnlineUser>
-                        );
-                    })}
-                </OnlineUsersContainer>
-                <Divider></Divider>
-                <RandoCall>
-                    <div className="rando-header">Rando Call</div>
-                    <img src={randoDice} className="rando-btn">
-
-                    </img>
-                </RandoCall>
-
-            </UsersPanel>
+            <UsersPanel></UsersPanel>
             <MsgPanelContent 
                 chatUser={chatUser} 
                 users={users}
                 sendMessage={sendMessage}
                 rooms={rooms}
-            >
-                
-                boobs
-            </MsgPanelContent>
+            ></MsgPanelContent>
         </Layout>  
     )
 }
