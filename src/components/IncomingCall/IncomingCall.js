@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button'
 
 const useStyles = makeStyles((theme) => ({
   modal: {
+      color: 'black',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
