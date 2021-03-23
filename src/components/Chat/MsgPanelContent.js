@@ -14,6 +14,7 @@ import randoDice from '../../assets/RandoDice.png';
 import userIcon from '../../assets/userIcon.svg';
 import msgSendBtn from '../../assets/msgSendBtn.png';
 import { Divider } from '@material-ui/core';
+import VideoCall from './VideoCall'
 
 const MsgPanel = styled.div`
     
@@ -124,13 +125,13 @@ export function MsgPanelContent(){
         chatUser,
         sendMessage,
         rooms,
-        setRooms,
         users,
-        getConversationMessages
+        getConversationMessages,
+        callPeer
     } = useContext(ClientContext);
     const [message, setMessage] = useState('');
     let history = [];
-
+    
   
     const inputRef = createRef();
     function handleInputChange(e){
@@ -189,6 +190,7 @@ export function MsgPanelContent(){
             <MsgHistory>
                 <div> - Chat History with {users[chatUser]} - </div>
                 <ShowHistory></ShowHistory> 
+                <VideoCall></VideoCall>
             </MsgHistory>
             <MsgInput>
                 <input 
@@ -200,6 +202,9 @@ export function MsgPanelContent(){
                 />
                 <button>
                     <img src={msgSendBtn} alt=""></img>
+                </button>
+                <button onClick={(e)=>{callPeer(chatUser)}}>
+                   Call {users[chatUser]}
                 </button>
                 
             </MsgInput>
