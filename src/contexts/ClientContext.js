@@ -30,8 +30,8 @@ export default function ClientContextProvider(props) {
 
     const socket = useRef();
     useEffect(()=>{
-        // socket.current = io("http://localhost:5000", {
-        socket.current = io("https://meet-and-greet.herokuapp.com/", {
+        socket.current = io("http://localhost:5000", {
+        // socket.current = io("https://meet-and-greet.herokuapp.com/", {
             reconnectionDelayMax: 10000,
             query: {
               auth: "123"
@@ -169,20 +169,24 @@ export default function ClientContextProvider(props) {
         socket.current.emit("leftCall", {userGone: yourID, userPresent: callerId});
         setCallEnding(true);
     }
-    function validateUserName(name){
+    function validateUserName(name, tagsInput){
+        console.log("validateUserName");
         if(name.length < 3){
             setSignInError("userNameTooShort");
             return;
         }
-        if(users[name]){
-            for(let key in users){
-                if(users[key] === name){
-                    setSignInError("userNameTaken");
-                    return;
-                }
+        
+        for(let key in users){
+            if(users[key].name === name){
+                setSignInError("userNameTaken");
+                return;
             }
         }
-        socket.current.emit("yourUserName", name);
+        
+        
+        console.log(tagsInput);
+        socket.current.emit("yourUserName", {name: name, tags: tagsInput});
+        setTags(tagsInput);
     }
     // function sendMessage(msg, recipientId){
     //     let msgHistoryId = null;

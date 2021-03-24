@@ -8,11 +8,12 @@ import styled ,{ withTheme, keyframes} from 'styled-components';
  
 export function SignIn(props) {
     const theme = props.theme;
-    console.log(props.theme);
+    // console.log(props.theme);
     
     const [userName, setUserName] = useState("");
-
-    const {validateUserName, signInError, setTags} = useContext(ClientContext);
+    const [tags, setTags] = useState(['', '','']);
+    const {validateUserName, signInError} = useContext(ClientContext);
+    
 
     const nameRef = createRef();
     const tag1 = createRef();
@@ -31,15 +32,11 @@ export function SignIn(props) {
     // }
     function textFieldEnter(e){
         if(e.keyCode === 13){
-            validateUserName(userName);
+            console.log('textFieldEnter');
+            console.log(tags);
+            validateUserName(userName, tags);
         }
-        if(tag1.current!=null && tag2.current!=null && tag2.current!=null){
-            setTags([
-                tag1.current.value,
-                tag2.current.value,
-                tag3.current.value,
-            ])
-        }
+        
     }
     function updateUserName(e){
         if(nameRef.current!=null){
@@ -47,6 +44,19 @@ export function SignIn(props) {
             setUserName(nameRef.current.value);
         }
         
+    }
+    function updateTags(e){
+        const newTags = []
+        if(tag1.current!= null){
+            newTags.push(tag1.current.value);
+        }
+        if(tag2.current!= null){
+            newTags.push(tag2.current.value);
+        }
+        if(tag3.current!= null){
+            newTags.push(tag3.current.value);
+        }
+        setTags(newTags);
     }
     
     function display(){
@@ -78,10 +88,10 @@ export function SignIn(props) {
                             onKeyDown={(e) => textFieldEnter(e)}id="outlined-basic" 
                             placeholder="StevieWonder" 
                         />
-                    <TagInput ref={tag1} type="text" placeholder="tag"></TagInput>
-                    <TagInput ref={tag2}type="text" placeholder="tag"></TagInput>
-                    <TagInput ref={tag3}type="text" placeholder="tag"></TagInput>
-                    <SignInBtn onClick={() => validateUserName(userName)}>
+                    <TagInput ref={tag1} onChange={(e) => updateTags(e)} type="text" placeholder="tag"></TagInput>
+                    <TagInput ref={tag2} onChange={(e) => updateTags(e)} type="text" placeholder="tag"></TagInput>
+                    <TagInput ref={tag3} onChange={(e) => updateTags(e)} type="text" placeholder="tag"></TagInput>
+                    <SignInBtn onClick={() => validateUserName(userName, tags)}>
                         Sign In
                     </SignInBtn>
                     
