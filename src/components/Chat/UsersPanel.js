@@ -14,7 +14,7 @@ import userIcon from '../../assets/userIcon.svg';
 
 
 const UsersPanelContainer = styled.div`
-    background-color: #303742;
+    background-color: linear-gradient(180deg, rgba(46, 117, 105, 0.7) 0%, rgba(7, 39, 58, 0.7) 100%);
     min-width: 300px;
     padding: 20px;
     display: flex;
@@ -73,14 +73,14 @@ const OnlineUser = styled.div`
     }
     .info.name{
         font-family: 'Roboto';
-        font-size: 18px;
+        font-size: 16px;
         font-weight: 300;
     }
     &:hover{
         opacity: 0.6;
     }
 `;
-const Tags = styled.div`
+const TagsContainer = styled.div`
     display: flex;
     flex-wrap: wrap;
 
@@ -91,13 +91,13 @@ const Tags = styled.div`
         border-radius: 50px;
        
     }
-    .tag.first{
+    .tag:nth-child(1){
         background-color:#EB5757 ;
     }
-    .tag.second{
+    .tag:nth-child(2){
         background-color:#F2994A ;
     }
-    .tag.third{
+    .tag:nth-child(3){
         background-color:#6FCF97;
     }
     
@@ -147,6 +147,9 @@ export function UsersPanel(props) {
         rooms,
         setRooms,
     } = useContext(ClientContext);
+    const [searchInput, setSearchInput] = useState("");
+
+    const searchInputRef = createRef();
 
   
     let handleUserSelect = (id)=>{
@@ -163,39 +166,83 @@ export function UsersPanel(props) {
         setChatUser(id);
         console.log("oh yeah>");
     }
+    const updateSearchInput = () =>{
+        setSearchInput(searchInputRef.current.value);
+    }
+
+    const filteredUsers = () =>{
+        if(searchInput == ""){
+            return Object.keys(users);
+        }
+
+        
+
+        return Object.keys(users).filter(id =>{
+          
+            if(users[id].name.toLowerCase().includes(searchInput.toLowerCase())){
+                //matching the name
+                 return true;
+            }else if(users[id].tags.filter(tag => tag.toLowerCase().includes(searchInput.toLowerCase())).length>0){
+                //matching amy of the tags
+                return true;
+            }else{
+                return false;
+            }
+        })
+    }
+
+    const tagslist= (tags) =>{
+        const list = [];
+        tags.forEach((tag)=>{
+            if(tag == '' ){
+                return;
+            }
+            list.push(<div className="tag">{tag}</div>)
+        })
+        return list;
+    }
+    
+    const  onlineUsersList = () =>{
+        
+        console.log(users);
+        const list = []
+        filteredUsers().map(id => {
+            if (id === yourID) {
+                return null;
+            }
+            const name = users[id].name;
+            const tags = users[id].tags
+            list.push(
+                <OnlineUser 
+                    key ={id} 
+                    name={name}  
+                    userId={id} 
+                    callPeer={() => callPeer(id)} className="user"
+                    onClick={() =>handleUserSelect(id)}
+                >
+                    <img src={userIcon} className="icon"></img>
+                    <div className="info">
+                        <div className="name">{name}</div>
+                        <TagsContainer>
+                            {tagslist(tags)}
+                        </TagsContainer>  
+                    </div>
+                </OnlineUser>
+            );
+        });
+        return list;
+    } 
+
 
     return (
         
             <UsersPanelContainer>
                 <SearchUsers>
-                    <input type="text" placeholder="Search..."></input>
+                    <input onChange={(e) => updateSearchInput()} ref={searchInputRef} type="text" placeholder="Search..."></input>
                 </SearchUsers>
                 <OnlineUsersContainer>
-                    {/* //Generate users from server       */}
-                    {Object.keys(users).map(key => {
-                        if (key === yourID) {
-                            return null;
-                        }
-                        return (
-                            <OnlineUser 
-                                key ={key} 
-                                name={users[key]}  
-                                userId={key} 
-                                callPeer={() => callPeer(key)} className="user"
-                                onClick={() =>handleUserSelect(key)}
-                            >
-                                <img src={userIcon} className="icon"></img>
-                                <div className="info">
-                                    <div className="name">{users[key]}</div>
-                                    <Tags >
-                                        <div className="className first">anime</div>
-                                        <div className="tag second">music</div>
-                                        <div className="tag third">gaming</div>
-                                    </Tags>
-                                </div>
-                            </OnlineUser>
-                        );
-                    })}
+                    {/* //Generate users from server*/}
+                    {onlineUsersList()}
                 </OnlineUsersContainer>
                 <Divider></Divider>
                 <RandoCall>
