@@ -8,6 +8,7 @@ export const ClientContext = createContext();
 export default function ClientContextProvider(props) {
     const [yourID, setYourID] = useState("");
     const [users, setUsers] = useState({});
+    const [tags, setTags] = useState([]);
     const [userStream, setUserStream] = useState(null);
     const [partnerStream, setPartnerStream] = useState(null);
     const [receivingCall, setReceivingCall] = useState(false);
@@ -61,7 +62,7 @@ export default function ClientContextProvider(props) {
             setReceivingCall(true);
             setCallerId(data.from);
             setCallerSignal(data.signal);
-            //console.log("receiving call dawg");
+            console.log("receiving call dawg");
         })
         socket.current.on("signInError", error =>{
             setSignInError(error);
@@ -243,6 +244,8 @@ export default function ClientContextProvider(props) {
     //     }
     //     setNewMessage(null);
     // }
+
+    //Initiates the call process between users when some click to call someone
     function callPeer(partnerId) {
         setCallerId(partnerId);
         navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(newStream => {
@@ -366,6 +369,8 @@ export default function ClientContextProvider(props) {
         conversations,
         createConversation,
         getConversationMessages,
+        setTags,
+        tags
        
     }
     return (
