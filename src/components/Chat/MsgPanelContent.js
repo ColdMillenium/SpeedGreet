@@ -42,18 +42,18 @@ const ReceivedMsg = styled.div`
         padding: 3px;
     }
     .name{
-        font-size: 24px;
+        font-size: 16px;
     }
     .time{
-        font-size: 18px;
+        font-size: 14px;
         color: #929292;
     }
     .msg{
         color: #213048;
         background-color: #A3F0F0;
         width: fit-content;
-        font-size: 18px;
-        padding: 20px;
+        font-size: 14px;
+        padding: 12px;
         border-radius: 0 30px 30px 30px;
     }
 `;
@@ -81,6 +81,7 @@ const MsgInput = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
+    
 
 
 
