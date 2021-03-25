@@ -95,6 +95,17 @@ const SettingPanel = styled.div`
 
 `;
 
+const RandoCallOptions = styled.div`
+    position: fixed;
+    display: flex;
+    gap: 30px;
+    top: 0;
+    right: 0;
+    padding: 20px;
+    background: white;
+`;
+
+
 
 
 export function Train(props) {
@@ -117,6 +128,10 @@ export function Train(props) {
         sendMessage,
         rooms,
         setRooms,
+        isInRandoCall,
+        joinRandoCall,
+        leaveRandoCall,
+        skipRandoCall,
     } = useContext(ClientContext);
 
     const userVideoRef = useRef();
@@ -149,6 +164,7 @@ export function Train(props) {
             
         );
     }
+    
 
     let partnerVideoWindow;
     if (callAccepted ) {
@@ -184,9 +200,28 @@ export function Train(props) {
         console.log("oh yeah>");
     }
 
+    let displayRandoCallOptions = () =>{
+        if(callAccepted && isInRandoCall){
+            return (
+                <RandoCallOptions>
+                    <button onClick={(e)=> leaveRandoCall()}>Exit Rando Calls</button>
+                    <button onClick={(e)=> skipRandoCall()}>Skip this call</button>
+                </RandoCallOptions>
+            )
+        }else{
+            return(
+                <RandoCallOptions>
+                    <button onClick={(e)=> joinRandoCall()}>Join rando call</button>
+                </RandoCallOptions>
+            )
+        }
+    }
+
+
     return (
           
         <Layout>
+            {displayRandoCallOptions()}
             <SettingPanel>
                 {incomingCall}
                 {/* {partnerVideoWindow} */}

@@ -26,6 +26,7 @@ export default function ClientContextProvider(props) {
     const [newMessage, setNewMessage ] = useState({});
     const [rooms, setRooms] = useState({});
     const [conversations, setConversations] = useState([]);
+    const [isInRandoCall, setIsInRandoCall] = useState(false);
 
 
     const socket = useRef();
@@ -339,6 +340,26 @@ export default function ClientContextProvider(props) {
         setReceivingCall(false);
         setCallEnding(false);
     }
+    //talks to server and puts you in a queue for random cal
+    function addToRandoQueue(){
+        socket.current.emit("addToRandoQueue", yourID);
+    }
+    //You've been doing rando calls but you're leaving your current call and being put back into the queue
+    function skipRandoCall(){
+        leaveCall();
+        addToRandoQueue();
+    }
+
+    //talks to the server and puts you in a queue for random calls. You're just getting started doing rando calls
+    function joinRandoCall(){
+        setIsInRandoCall(true);
+        addToRandoQueue();
+    }
+    //just end the current call you're doing and you're no longer doing random calls
+    function leaveRandoCall(){
+        leaveCall();
+        setIsInRandoCall(false);
+    }
 
     const value = {
         validateUserName,
@@ -374,7 +395,11 @@ export default function ClientContextProvider(props) {
         createConversation,
         getConversationMessages,
         setTags,
-        tags
+        tags,
+        isInRandoCall,
+        joinRandoCall,
+        leaveRandoCall,
+        skipRandoCall,
        
     }
     return (
