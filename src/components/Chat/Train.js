@@ -16,6 +16,7 @@ import userIcon from '../../assets/userIcon.svg';
 import settingsBtn from '../../assets/settings-btn.svg';
 import backBtn from '../../assets/back-btn.svg'
 import msgSendBtn from '../../assets/msgSendBtn.png';
+import roadBackground from '../../assets/Road.png';
 import MsgPanelContent from './MsgPanelContent'
 import UsersPanel from './UsersPanel'
 
@@ -24,16 +25,21 @@ import UsersPanel from './UsersPanel'
 
 
 const RemoteVideo = styled.video`
+    position: absolute;
     object-fit: fill;
     width: 100%;
     height: 100%;
     margin: 0px;
+    right: 0;
+    top: 0;
+    left:0;
+    bottom:70px;
 `;
 const LocalVideo = styled.video`
-    position: absolute;
+    position: fixed;
     border: 1px solid ${props => props.theme.colors.accent};
     bottom: 0px;
-    right: 0px;
+    left: 100px;
     border-radius: 5px;
     width: 300px;
     box-shadow: 0 3 6 rgba(0, 0, 0, 0.2);
@@ -60,22 +66,33 @@ const Layout = styled.div`
     height: 100vh;
     width: 100vw;
     margin: 0;
+    background: linear-gradient(180deg, rgba(23, 113, 0, 0.32) 13.85%, rgba(8, 17, 50, 0.8) 85.21%), url(${roadBackground});
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
 `
 const SettingPanel = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    background-color: #282C33;
+    background: rgba(5, 32, 45, 1);;
     max-height: 100vh;
     /* max-width: 60px; */
-    padding: 10px;
+    padding: 25px 10px;
     
     
     svg {
-        max-width: 40px;
+        color: #B1FFAB;
+        max-width: 50px;
         transform: scale(-1);
     }
+    svg:hover{
+        color: white;
+        transform: scale(-1.05)
+    }
+
+
 `;
 
 
@@ -104,7 +121,8 @@ export function Train(props) {
 
     const userVideoRef = useRef();
     const partnerVideoRef = useRef();
-    const caller = users[callerId];
+
+ 
     
     
     
@@ -125,7 +143,7 @@ export function Train(props) {
             <div>
                 <LocalVideo ref={userVideoRef} autoPlay muted id="local-video"></LocalVideo>
                 <Button onClick={()=>{notifyLeftCall()}}variant="contained" color="secondary">
-                    Leave Call with {caller}
+                    Leave Call with {users[callerId].name}
                 </Button>
             </div>
             
@@ -140,35 +158,17 @@ export function Train(props) {
         } 
         console.log("showing partner stream");
         partnerVideoWindow = (
-            <div>
-                <Toolbar/>
-                <Toolbar/>
+            
                 <RemoteVideo ref={partnerVideoRef} autoPlay id="remote-video"></RemoteVideo>
-            </div>
         );
     }
     
     let incomingCall;
-    if (receivingCall && !callAccepted) {
-        return <IncomingCall></IncomingCall>
+    if (receivingCall && !callAccepted && callerId != null && callerId != "") {
+        console.log(callerId);
+        incomingCall = <IncomingCall></IncomingCall>
     }
-    let notification = () =>{
-        console.log("wtf dude "+ callAccepted);
-        if(!callAccepted){
-            return (
-                <div>
-                    <Toolbar/>
-                    <Toolbar/>
-                    <h5> 
-                        Welcome {userName}!
-                    </h5>
-                    <h6 > 
-                        {incomingCall}
-                    </h6>
-                </div>
-            )
-        }
-    }
+   
     let handleUserSelect = (id)=>{
         console.log(id);
         if(rooms.hasOwnProperty(id)){
@@ -188,10 +188,12 @@ export function Train(props) {
           
         <Layout>
             <SettingPanel>
+                {incomingCall}
+                {/* {partnerVideoWindow} */}
+                {userVideoWindow}
                 {/* <img src={settingsBtn} alt=""/> */}
                 <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="sign-out-alt" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="svg-inline--fa fa-sign-out-alt fa-w-16 fa-3x"><path fill="currentColor" d="M497 273L329 441c-15 15-41 4.5-41-17v-96H152c-13.3 0-24-10.7-24-24v-96c0-13.3 10.7-24 24-24h136V88c0-21.4 25.9-32 41-17l168 168c9.3 9.4 9.3 24.6 0 34zM192 436v-40c0-6.6-5.4-12-12-12H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32h84c6.6 0 12-5.4 12-12V76c0-6.6-5.4-12-12-12H96c-53 0-96 43-96 96v192c0 53 43 96 96 96h84c6.6 0 12-5.4 12-12z" className=""></path></svg>
                 <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="sliders-h" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="svg-inline--fa fa-sliders-h fa-w-16 fa-5x"><path fill="currentColor" d="M496 384H160v-16c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v16H16c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h80v16c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-16h336c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16zm0-160h-80v-16c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v16H16c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h336v16c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-16h80c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16zm0-160H288V48c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v16H16C7.2 64 0 71.2 0 80v32c0 8.8 7.2 16 16 16h208v16c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-16h208c8.8 0 16-7.2 16-16V80c0-8.8-7.2-16-16-16z" className=""></path></svg>
-                <IncomingCall></IncomingCall>
             </SettingPanel>
             <UsersPanel></UsersPanel>
             <MsgPanelContent 
@@ -199,7 +201,10 @@ export function Train(props) {
                 users={users}
                 sendMessage={sendMessage}
                 rooms={rooms}
-            ></MsgPanelContent>
+            >
+
+            {partnerVideoWindow}
+            </MsgPanelContent>
             
         </Layout>  
     )

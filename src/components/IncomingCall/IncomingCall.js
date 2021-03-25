@@ -33,7 +33,7 @@ export default function IncomingCall() {
      
     } = useContext(ClientContext);
     const classes = useStyles();
-    const caller = users[callerId];
+    const caller = users[callerId].name;
     const open = receivingCall && !callAccepted;
 
    

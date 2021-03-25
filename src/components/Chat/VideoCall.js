@@ -27,7 +27,7 @@ export function VideoCall(props) {
 
     const userVideoRef = useRef();
     const partnerVideoRef = useRef();
-    const caller = users[callerId];
+    
 
 
 
@@ -48,7 +48,7 @@ export function VideoCall(props) {
             <div>
                 <LocalVideo ref={userVideoRef} autoPlay muted id="local-video"></LocalVideo>
                 <Button onClick={()=>{notifyLeftCall()}}variant="contained" color="secondary">
-                    Leave Call with {caller}
+                    Leave Call with {users[callerId].name}
                 </Button>
             </div>
             
