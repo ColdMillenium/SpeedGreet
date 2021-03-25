@@ -1,6 +1,18 @@
 *{
   box-sizing: border-box
 }
+:root{
+  --received-message-color: linear-gradient(180deg, rgba(163, 240, 240, 0.6) 0%, rgba(163, 240, 240, 0.384) 99.99%);
+  --sent-message-color: linear-gradient(180deg, rgba(156, 232, 120, 0.6) 0%, rgba(156, 232, 120, 0.5175) 99.99%, rgba(156, 232, 120, 0.384) 100%);
+  --users-panel-color: linear-gradient(180deg, rgba(46, 117, 105, 0.7) 0%, rgba(7, 39, 58, 0.7) 100%);
+  --dark: #05202D;
+  --white: #EFEFEF;
+  --time-sent-color: #DEDEDE;
+  --message-input-color: #0D4C4A;
+  
+
+
+}
 .App {
   text-align: center;
   overflow: hidden; /* Hide scrollbars */
