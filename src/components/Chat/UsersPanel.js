@@ -13,116 +13,6 @@ import userIcon from '../../assets/userIcon.svg';
 
 
 
-const UsersPanelContainer = styled.div`
-    background-color: linear-gradient(180deg, rgba(46, 117, 105, 0.7) 0%, rgba(7, 39, 58, 0.7) 100%);
-    min-width: 300px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 50px;
-
-`;
-const SearchUsers = styled.div`
-    display: flex;
-  
-    
-    input{
-        width: 100%;
-        font-size: 18px;
-        background-color: #282C33;
-        border: none;
-        padding: 13px;
-        border-radius: 50px;
-        color: #929292;
-    }
-
-    input:focus{
-        outline: 0;
-
-    }
-    input:active{
-        border: none
-    }
-
-`;
-const OnlineUsersContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    height: 100%;
-    overflow-y: auto;
-`;
-const OnlineUser = styled.div`
-    display: flex;
-    flex-direction: row;
-    cursor: pointer;
-    transition: all 0.1s ease-in;
-    
-    color: #EFEFEF;
-    img{
-        height: 50px;
-        width: 50px;
-       
-        margin-right: 10px;
-    }
-    .info{
-        display: flex;
-        flex-direction: column;
-        justify-content: space-evenly;
-    }
-    .info.name{
-        font-family: 'Roboto';
-        font-size: 16px;
-        font-weight: 300;
-    }
-    &:hover{
-        opacity: 0.6;
-    }
-`;
-const TagsContainer = styled.div`
-    display: flex;
-    flex-wrap: wrap;
-
-    .tag{
-        font-size: 12px;
-        padding: 3px 6px;
-        margin: 0 3px;
-        border-radius: 50px;
-       
-    }
-    .tag:nth-child(1){
-        background-color:#EB5757 ;
-    }
-    .tag:nth-child(2){
-        background-color:#F2994A ;
-    }
-    .tag:nth-child(3){
-        background-color:#6FCF97;
-    }
-    
-`;
-const Divider = styled.div`
-    height: 1px;
-    background-color: #929292;
-    width: 100%;
-`;
-const RandoCall = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 10px;
-    .rando-header{
-        font-size: 32px;
-        font-family: 'Montserrat';
-        font-weight: bold;
-      
-    }
-
-`;
-
-
 
 
 
@@ -254,3 +144,121 @@ export function UsersPanel(props) {
 }
 
 export default UsersPanel;
+
+const UsersPanelContainer = styled.div`
+    background:linear-gradient(180deg, rgba(46, 117, 105, 0.7) 0%, rgba(7, 39, 58, 0.7) 100%);
+
+
+    /* background-color: blue; */
+    /* background-color: linear-gradient(180deg, rgba(46, 117, 105, 0.7) 0%, rgba(7, 39, 58, 0.7) 100%); */
+    min-width: 300px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    filter: drop-shadow(4px 0px 10px rgba(0, 0, 0, 0.25));
+
+`;
+const SearchUsers = styled.div`
+    display: flex;
+  
+    
+    input{
+        width: 100%;
+        font-size: 18px;
+        border: none;
+        padding: 13px;
+        border-radius: 50px;
+        color: #B1FFAB;
+        background: rgba(14, 69, 69, 1);
+        box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.1) inset;
+
+    }
+
+    input:focus{
+        outline: 0;
+
+    }
+    input:active{
+        border: none
+    }
+
+`;
+const OnlineUsersContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    height: 100%;
+    overflow-y: auto;
+`;
+const OnlineUser = styled.div`
+    display: flex;
+    flex-direction: row;
+    cursor: pointer;
+    transition: all 0.1s ease-in;
+    
+    color: #EFEFEF;
+    img{
+        height: 50px;
+        width: 50px;
+       
+        margin-right: 10px;
+    }
+    .info{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+    }
+    .info.name{
+        font-family: 'Roboto';
+        font-size: 16px;
+        font-weight: 300;
+    }
+    &:hover{
+        opacity: 0.6;
+    }
+`;
+const TagsContainer = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+
+    .tag{
+        font-size: 12px;
+        padding: 3px 6px;
+        margin: 0 3px;
+        border-radius: 50px;
+       
+    }
+    .tag:nth-child(1){
+        background-color:#EB5757 ;
+    }
+    .tag:nth-child(2){
+        background-color:#F2994A ;
+    }
+    .tag:nth-child(3){
+        background-color:#6FCF97;
+    }
+    
+`;
+const Divider = styled.div`
+    height: 1px;
+    background-color: #929292;
+    width: 100%;
+`;
+const RandoCall = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+    .rando-header{
+        font-size: 32px;
+        font-family: 'Montserrat';
+        font-weight: bold;
+      
+    }
+
+`;
+
+
