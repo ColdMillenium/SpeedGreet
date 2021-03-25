@@ -19,7 +19,7 @@ import VideoCall from './VideoCall'
 const MsgPanel = styled.div`
     
     position: relative;
-    background-color: #213048;
+    background-color: transparent;
     min-width: 300px;
     width: 100%;
 `;
@@ -35,6 +35,7 @@ const ReceivedMsg = styled.div`
     height: fit-content;
     width: fit-content;
     
+    
     .from{
         display: flex;
         align-items: center;
@@ -42,20 +43,24 @@ const ReceivedMsg = styled.div`
         padding: 3px;
     }
     .name{
+        font-weight: bold;
         font-size: 16px;
     }
     .time{
         font-size: 14px;
-        color: #929292;
+        color: rgba(222, 222, 222, 1);
+;
     }
     .msg{
-        color: #213048;
-        background-color: #A3F0F0;
+        color: #EFEFEF;
+        background: linear-gradient(180deg, rgba(163, 240, 240, 0.6) 0%, rgba(163, 240, 240, 0.384) 99.99%);
         width: fit-content;
         font-size: 14px;
         padding: 12px;
         border-radius: 0 30px 30px 30px;
+        box-shadow: 0px 5px 4px rgba(0, 0, 0, 0.25);
     }
+    
 `;
 const SentMsg = styled(ReceivedMsg)`
     margin: 0 0 0 auto;
@@ -64,16 +69,18 @@ const SentMsg = styled(ReceivedMsg)`
     }
     .msg{
         border-radius: 30px 0 30px 30px;
-        background-color: #9CE878;
+        background: linear-gradient(180deg, rgba(156, 232, 120, 0.6) 0%, rgba(156, 232, 120, 0.5175) 99.99%, rgba(156, 232, 120, 0.384) 100%);
+
     }
 `;
 
 const MsgInput = styled.div`
+   
     position: absolute;
     bottom: 0;
     left:0;
     right:0;
-    background: #EFEFEF;
+    background: #0D4C4A;
     height: 75px;
   
     padding: 0 10px 0 30px;
@@ -81,15 +88,19 @@ const MsgInput = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
+    box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
     
 
 
 
     input{
-        color: #C4C4C4;
         background: transparent;
+        color: #B1FFAB;
         border: none;
         width: calc(100% - 40px);
+        height:100%;
+        font-family: 'Roboto';
+        font-weight: light;
         
     }
     input:focus{
@@ -100,6 +111,7 @@ const MsgInput = styled.div`
         border: none
     }
     button{
+        color: #B1FFAB;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -120,7 +132,7 @@ const MsgInput = styled.div`
     }
 `;
 
-export function MsgPanelContent(){
+export function MsgPanelContent(props){
     const {
         yourID,
         chatUser,
@@ -164,7 +176,7 @@ export function MsgPanelContent(){
             if(msg.sender === yourID){
                 renderedMessages.push(<SentMsg key={key}>
                     <div className="from">
-                        <div className="name">{users[msg.sender]}</div>
+                        <div className="name">{users[msg.sender].name}</div>
                         <div className="time"> @ {msg.time}</div>
                     </div>
                     <div className="msg">{msg.text}</div>
@@ -172,7 +184,7 @@ export function MsgPanelContent(){
             }else{
                 renderedMessages.push(<ReceivedMsg key={key}>
                     <div className="from">
-                        <div className="name">{users[msg.sender]}</div>
+                        <div className="name">{users[msg.sender].name}</div>
                         <div className="time"> @ {msg.time}</div>
                     </div>
                     <div className="msg">{msg.text}</div>
@@ -188,10 +200,11 @@ export function MsgPanelContent(){
        console.log(rooms);
        return(
         <MsgPanel>
+            {props.children}
             <MsgHistory>
-                <div> - Chat History with {users[chatUser]} - </div>
+                <div> - Chat History with {users[chatUser].name} - </div>
                 <ShowHistory></ShowHistory> 
-                <VideoCall></VideoCall>
+                {/* <VideoCall></VideoCall> */}
             </MsgHistory>
             <MsgInput>
                 <input 
@@ -205,7 +218,7 @@ export function MsgPanelContent(){
                     <img src={msgSendBtn} alt=""></img>
                 </button>
                 <button onClick={(e)=>{callPeer(chatUser)}}>
-                   Call {users[chatUser]}
+                   Call {users[chatUser].name}
                 </button>
                 
             </MsgInput>
