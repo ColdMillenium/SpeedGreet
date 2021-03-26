@@ -62,6 +62,7 @@ const ContentContainer = styled.div`
 //     overflow: hidden;
 // `;
 const Layout = styled.div`
+    position: relative;
     display: flex;
     height: 100vh;
     width: 100vw;
@@ -96,7 +97,7 @@ const SettingPanel = styled.div`
 `;
 
 const RandoCallOptions = styled.div`
-    position: fixed;
+    position: absolute;
     display: flex;
     gap: 30px;
     top: 0;
@@ -200,28 +201,29 @@ export function Train(props) {
         console.log("oh yeah>");
     }
 
-    let displayRandoCallOptions = () =>{
-        if(callAccepted && isInRandoCall){
-            return (
-                <RandoCallOptions>
-                    <button onClick={(e)=> leaveRandoCall()}>Exit Rando Calls</button>
-                    <button onClick={(e)=> skipRandoCall()}>Skip this call</button>
-                </RandoCallOptions>
-            )
-        }else{
-            return(
-                <RandoCallOptions>
-                    <button onClick={(e)=> joinRandoCall()}>Join rando call</button>
-                </RandoCallOptions>
-            )
-        }
+    let displayRandoCallOptions;
+    if(isInRandoCall){
+        displayRandoCallOptions= (
+            <RandoCallOptions>
+                <button onClick={(e)=> {leaveRandoCall()}}>Exit Rando Calls</button>
+                <button onClick={(e)=> skipRandoCall()}>Skip this call</button>
+            </RandoCallOptions>
+        )
+    }else{
+        displayRandoCallOptions =(
+            <RandoCallOptions>
+                <button onClick={(e)=> {joinRandoCall()}}>Join rando call</button>
+            </RandoCallOptions>
+        )
     }
+    
 
 
     return (
           
         <Layout>
-            {displayRandoCallOptions()}
+            
+            {displayRandoCallOptions}
             <SettingPanel>
                 {incomingCall}
                 {/* {partnerVideoWindow} */}
