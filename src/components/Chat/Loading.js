@@ -5,13 +5,13 @@ import { FullscreenExit } from '@material-ui/icons';
 import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles((theme) => ({
-    // box: {
-    //   backgroundColor: theme.colors.accent,
-    //   height: 50,
-    //   width:50,
-    //   overflow: "visable",
+    box: {
+      backgroundColor: theme.colors.accent,
+      height: 50,
+      width:50,
+      overflow: "visable",
 
-    // },
+    },
     red: {
         backgroundColor: "red",
         height: 50,
