@@ -150,9 +150,9 @@ export function MsgPanelContent(props){
     let history = [];
     const partnerVideoRef = useRef();
 
-    // if(randoCallInitiator!=null){
-    //     setupRandoCall()
-    // }
+    if(randoCallInitiator!=""){
+        setupRandoCall()
+    }
     
   
     const inputRef = createRef();
