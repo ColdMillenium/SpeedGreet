@@ -140,10 +140,19 @@ export function MsgPanelContent(props){
         rooms,
         users,
         getConversationMessages,
-        callPeer
+        callPeer,
+        randoCallData,
+        partnerStream,
+        randoCallInitiator,
+        setupRandoCall
     } = useContext(ClientContext);
     const [message, setMessage] = useState('');
     let history = [];
+    const partnerVideoRef = useRef();
+
+    // if(randoCallInitiator!=null){
+    //     setupRandoCall()
+    // }
     
   
     const inputRef = createRef();
@@ -200,7 +209,7 @@ export function MsgPanelContent(props){
        console.log(rooms);
        return(
         <MsgPanel>
-            {props.children}
+            
             <MsgHistory>
                 <div> - Chat History with {users[chatUser].name} - </div>
                 <ShowHistory></ShowHistory> 

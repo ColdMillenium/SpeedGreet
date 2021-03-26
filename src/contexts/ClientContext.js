@@ -3,6 +3,7 @@ import io from "socket.io-client";
 import Peer from "simple-peer";
 import { keyframes } from 'styled-components';
 import { YouTube } from '@material-ui/icons';
+import { DIR_TARGET } from 'electron-builder';
 
 export const ClientContext = createContext();
 export default function ClientContextProvider(props) {
@@ -27,6 +28,8 @@ export default function ClientContextProvider(props) {
     const [rooms, setRooms] = useState({});
     const [conversations, setConversations] = useState([]);
     const [isInRandoCall, setIsInRandoCall] = useState(false);
+    const [randoCallData, setRandoCallData] = useState(null);
+    const [randoCallInitiator, setRandoCallInitiator] = useState("");
 
 
     const socket = useRef();
@@ -80,6 +83,19 @@ export default function ClientContextProvider(props) {
         //     console.log(users);
         //    setNewMessage(data);
         // })
+
+        //going to tell users to setup their peer js for the call
+        socket.current.on("randoCallStart", data =>{
+            setRandoCallInitiator("true")
+            setCallerId(data);
+        })
+        socket.current.on("randoCallAccept", data =>{
+            setRandoCallInitiator("false");
+            setReceivingCall(true);
+            setCallerId(data.from);
+            setCallerSignal(data.signal);
+        })
+        
         
     },[]);
 
@@ -154,6 +170,11 @@ export default function ClientContextProvider(props) {
         //the data send contains signalData, which tells other users how to contact them back using the peer.
         socket.current.emit("callUser", data);
     }
+
+    function callRandoUser(data){
+        socket.current.emit("callRandoUser", data)
+    }
+
     function onPartnerAcceptsCall(peer){
         socket.current.on("callAccepted", signal => {
             setCallAccepted(true);
@@ -268,6 +289,7 @@ export default function ClientContextProvider(props) {
             peer.on("signal", data => {
                //you're going to send over data and invite the other partner to call
                callUser({ userToCall: partnerId, signalData: data, from: yourID })
+               //if partnerId is blank "", this is a rando call.
             })
             
             //when your partner is streaming, sets the video for the stream
@@ -291,6 +313,12 @@ export default function ClientContextProvider(props) {
             console.log('getUserMedia error: ' + error.name);
           });
     }
+
+    function startClientVideo(){
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(newStream => {
+            setUserStream(newStream);
+        })
+    }
     function acceptCall() {
        
         navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(newStream => {
@@ -313,6 +341,10 @@ export default function ClientContextProvider(props) {
                 console.log("Reciever: I've got caller's stream!");
                 
             });
+            socket.current.on("callAccepted", signal => {
+                setCallAccepted(true);
+                peer.signal(signal);
+            })
         
             peer.signal(callerSignal);
         }).catch(function(error) {
@@ -347,18 +379,69 @@ export default function ClientContextProvider(props) {
     //You've been doing rando calls but you're leaving your current call and being put back into the queue
     function skipRandoCall(){
         leaveCall();
-        addToRandoQueue();
+        // addToRandoQueue();
     }
 
     //talks to the server and puts you in a queue for random calls. You're just getting started doing rando calls
     function joinRandoCall(){
         setIsInRandoCall(true);
-        addToRandoQueue();
+        startClientVideo();
+        console.log("joining Rando Call");
+         addToRandoQueue();
     }
     //just end the current call you're doing and you're no longer doing random calls
     function leaveRandoCall(){
         leaveCall();
         setIsInRandoCall(false);
+    }
+
+    function setupRandoCall(){
+
+        if(randoCallInitiator == "true"){
+            const peer = new Peer({
+                initiator: true,
+                config: { iceServers: [{"url":"stun:global.stun.twilio.com:3478?transport=udp","urls":"stun:global.stun.twilio.com:3478?transport=udp"},{"url":"turn:global.turn.twilio.com:3478?transport=udp","username":"ab0e6dd0637d0c0302cda644e31464cefd83c74aa663ca163953c24110a82efe","urls":"turn:global.turn.twilio.com:3478?transport=udp","credential":"Ufh56vO/Oy/gxpOo144kg/G7VMwEWxUJ/8y78dUSeuw="},{"url":"turn:global.turn.twilio.com:3478?transport=tcp","username":"ab0e6dd0637d0c0302cda644e31464cefd83c74aa663ca163953c24110a82efe","urls":"turn:global.turn.twilio.com:3478?transport=tcp","credential":"Ufh56vO/Oy/gxpOo144kg/G7VMwEWxUJ/8y78dUSeuw="},{"url":"turn:global.turn.twilio.com:443?transport=tcp","username":"ab0e6dd0637d0c0302cda644e31464cefd83c74aa663ca163953c24110a82efe","urls":"turn:global.turn.twilio.com:443?transport=tcp","credential":"Ufh56vO/Oy/gxpOo144kg/G7VMwEWxUJ/8y78dUSeuw="}] },
+                trickle: false,
+                stream: userStream,
+            });
+            peer.on("signal", data => {
+                //you're going to send over data and invite the other partner to call
+                callRandoUser({ userToCall: callerId, signalData: data, from: yourID })
+                //if partnerId is blank "", this is a rando call.
+             })
+    
+             peer.on("stream", x => {
+                console.log(partnerStream);
+                setPartnerStream(x)
+                console.log("Reciever: I've got caller's stream!");
+                
+            });
+        }else{
+                
+            const peer = new Peer({
+                initiator: false,
+                trickle: false,
+                stream: userStream,
+            });
+            peer.on("signal", data => {
+                notifyAcceptCall({ signal: data, to: callerId });
+            })
+            peer.on("stream", x => {
+                console.log(partnerStream);
+                setPartnerStream(x)
+                console.log("Reciever: I've got caller's stream!");
+                
+            });
+            socket.current.on("callAccepted", signal => {
+                setCallAccepted(true);
+                peer.signal(signal);
+            })
+        
+            peer.signal(callerSignal);
+        
+        }
+
+        setRandoCallInitiator(null);
     }
 
     const value = {
@@ -400,6 +483,9 @@ export default function ClientContextProvider(props) {
         joinRandoCall,
         leaveRandoCall,
         skipRandoCall,
+        randoCallData,
+        randoCallInitiator,
+        setupRandoCall
        
     }
     return (
