@@ -36,17 +36,10 @@ export function UsersPanel(props) {
         sendMessage,
         rooms,
         setRooms,
-        joinRandoCall,
-        isInRandoCall,
-        skipRandoCall,
-        leaveRandoCall
-       
-
     } = useContext(ClientContext);
     const [searchInput, setSearchInput] = useState("");
 
     const searchInputRef = createRef();
-    const userVideoRef = useRef();
 
   
     let handleUserSelect = (id)=>{
@@ -129,41 +122,8 @@ export function UsersPanel(props) {
         });
         return list;
     } 
-    if(userVideoRef.current){
-        if(userStream!=null){
-            console.log("new video stream!")
-            userVideoRef.current.srcObject = userStream;
-        }else{
-            console.log("yeah its not here guys");
-        }
-    }
-    let userVideoWindow;
-        if(isInRandoCall){
-            userVideoWindow = (
-                <div>
-                    <button onClick={(e)=> {leaveRandoCall()}}>Exit Rando Calls</button>
-                    <button onClick={(e)=> skipRandoCall()}>Skip this call</button>
-                    <LocalVideo ref={userVideoRef} autoPlay muted id="local-video"></LocalVideo>
-                </div>
-                
-            )
-        }
-        
-    
-    let randoCallBtn;
 
-    if(!isInRandoCall){
-        randoCallBtn = (
-            <RandoCall onClick={(e)=>{joinRandoCall()}}>
-            <div className="rando-header">Rando Call</div>
-            <img src={randoDice} className="rando-btn"></img>
-            </RandoCall>)
-    }
-    
-    
-    
-    
-   
+
     return (
         
             <UsersPanelContainer>
@@ -175,8 +135,10 @@ export function UsersPanel(props) {
                     {onlineUsersList()}
                 </OnlineUsersContainer>
                 <Divider></Divider>
-                 {randoCallBtn}
-                {userVideoWindow}
+                <RandoCall>
+                    <div className="rando-header">Rando Call</div>
+                    <img src={randoDice} className="rando-btn"></img>
+                </RandoCall>
             </UsersPanelContainer>
     )
 }
@@ -296,17 +258,7 @@ const RandoCall = styled.div`
         font-weight: bold;
       
     }
-`;
-const UserVideo = styled.div`
-    
-`
-const LocalVideo = styled.video`
-    border: 1px red;
-    width: 100%;
-   ;
-    border-radius: 5px;
-    width: 300px;
-    box-shadow: 0 3 6 rgba(0, 0, 0, 0.2);
+
 `;
 
 
