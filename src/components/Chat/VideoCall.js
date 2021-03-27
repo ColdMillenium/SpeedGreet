@@ -74,7 +74,7 @@ export function VideoCall(props) {
         
             <VideoCallContainer>
                 {partnerVideoWindow}
-                {userVideoWindow}
+                {/* {userVideoWindow} */}
             </VideoCallContainer>
     )
 }

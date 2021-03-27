@@ -85,10 +85,17 @@ export default function ClientContextProvider(props) {
         
         //going to tell users to setup their peer js for the call
         socket.current.on("randoCallStart", data =>{
+            console.log(" Server is saying you're the initiator. Data below");
+            console.log(data);
             setRandoCallInitiator("true")
             setCallerId(data);
         })
         socket.current.on("randoCallAccept", data =>{
+            if(data == null){
+                return;
+            }
+            console.log('Sever is saying you are the receiver. Data below');
+            console.log(data);
             setRandoCallInitiator("false");
             setReceivingCall(true);
             setCallerId(data.from);
@@ -96,6 +103,16 @@ export default function ClientContextProvider(props) {
         })
         
     },[]);
+
+    useEffect(() =>{
+        if(callerId != "" && callerId!= null && !callAccepted && userStream!=null){
+            if(randoCallInitiator == "true" ){
+                setupRandoCall()
+            }else if(randoCallInitiator == "false" && callerSignal !=null){
+                setupRandoCall()
+            }
+        }
+    },[randoCallInitiator, callerId, callerSignal, callAccepted ,userStream])
 
     function createConversation(recipients){
         setConversations(prevConversations => {
@@ -178,12 +195,7 @@ export default function ClientContextProvider(props) {
         //the data send contains signalData, which tells other users how to contact them back using the peer.
         socket.current.emit("callUser", data);
     }
-    function onPartnerAcceptsCall(peer){
-        socket.current.on("callAccepted", signal => {
-            setCallAccepted(true);
-            peer.signal(signal);
-        })
-    }
+   
     
 
     function notifyAcceptCall(data){
@@ -303,8 +315,10 @@ export default function ClientContextProvider(props) {
 
             //When the partner accepts t    he call we need our peer to save the signal data.
             socket.current.on("callAccepted", signal => {
-                setCallAccepted(true);
-                peer.signal(signal);
+                if(!callAccepted){
+                    setCallAccepted(true);
+                    peer.signal(signal);
+                }
             })
         }).catch(function(error) {
             if (error.name === 'PermissionDeniedError') {
@@ -333,6 +347,7 @@ export default function ClientContextProvider(props) {
             })
             peer.on("stream", x => {
                 console.log(partnerStream);
+
                 setPartnerStream(x)
                 console.log("Reciever: I've got caller's stream!");
                 
@@ -393,7 +408,7 @@ export default function ClientContextProvider(props) {
         }
     
         function setupRandoCall(){
-    
+            console.log("setting up rando call: initiator:" + randoCallInitiator);
             if(randoCallInitiator == "true"){
                 const peer = new Peer({
                     initiator: true,
@@ -402,17 +417,29 @@ export default function ClientContextProvider(props) {
                     stream: userStream,
                 });
                 peer.on("signal", data => {
+                    if(callAccepted == false){
+                        console.log("callRandoUser");
+                        callRandoUser({ userToCall: callerId, signalData: data, from: yourID })
+                    }
                     //you're going to send over data and invite the other partner to call
-                    callRandoUser({ userToCall: callerId, signalData: data, from: yourID })
+                    
                     //if partnerId is blank "", this is a rando call.
                  })
         
                  peer.on("stream", x => {
                     console.log(partnerStream);
                     setPartnerStream(x)
-                    console.log("Reciever: I've got caller's stream!");
+                    console.log("RandoInitiator: I've got caller's stream!");
                     
                 });
+                //When the partner accepts t    he call we need our peer to save the signal data.
+                socket.current.on("callAccepted", signal => {
+                    if(!callAccepted){
+                        setCallAccepted(true);
+                        peer.signal(signal);
+                    }
+                })
+
             }else{
                     
                 const peer = new Peer({
@@ -426,19 +453,21 @@ export default function ClientContextProvider(props) {
                 peer.on("stream", x => {
                     console.log(partnerStream);
                     setPartnerStream(x)
-                    console.log("Reciever: I've got caller's stream!");
+                    console.log("RandoReciever: I've got caller's stream!");
                     
                 });
                 socket.current.on("callAccepted", signal => {
-                    setCallAccepted(true);
-                    peer.signal(signal);
+                    if(!callAccepted){
+                        setCallAccepted(true);
+                        peer.signal(signal);
+                    }
                 })
             
                 peer.signal(callerSignal);
             
             }
     
-            setRandoCallInitiator(null);
+            setRandoCallInitiator("");
         }
 
     const value = {
@@ -450,7 +479,6 @@ export default function ClientContextProvider(props) {
         yourID,
         receivingCall,
         callUser,
-        onPartnerAcceptsCall,
         notifyAcceptCall,
         callerSignal,
         callerId,

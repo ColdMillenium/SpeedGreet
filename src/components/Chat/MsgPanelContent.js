@@ -62,6 +62,7 @@ const ReceivedMsg = styled.div`
     }
     
 `;
+
 const SentMsg = styled(ReceivedMsg)`
     margin: 0 0 0 auto;
     .from{
@@ -72,6 +73,13 @@ const SentMsg = styled(ReceivedMsg)`
         background: linear-gradient(180deg, rgba(156, 232, 120, 0.6) 0%, rgba(156, 232, 120, 0.5175) 99.99%, rgba(156, 232, 120, 0.384) 100%);
 
     }
+`;
+const RemoteVideo = styled.video`
+    position: absolute;
+    width: 100%;
+    top:0;
+    
+    border: 20px solid red;
 `;
 
 const MsgInput = styled.div`
@@ -133,6 +141,8 @@ const MsgInput = styled.div`
 `;
 
 export function MsgPanelContent(props){
+
+    
     const {
         yourID,
         chatUser,
@@ -144,17 +154,14 @@ export function MsgPanelContent(props){
         randoCallData,
         partnerStream,
         randoCallInitiator,
-        setupRandoCall
+        setupRandoCall,
+        callerId,
     } = useContext(ClientContext);
     const [message, setMessage] = useState('');
+    const [hasPartner, setHasPartner] = useState(false);
     let history = [];
     const partnerVideoRef = useRef();
-
-    if(randoCallInitiator!=""){
-        setupRandoCall()
-    }
     
-  
     const inputRef = createRef();
     function handleInputChange(e){
         if(inputRef.current!=null){
@@ -163,6 +170,17 @@ export function MsgPanelContent(props){
             console.log(message);
         }
     }
+
+    useEffect(()=>{
+        if(partnerVideoRef.current){
+            if(partnerStream!=null){
+                console.log("new video Rando stream!")
+                partnerVideoRef.current.srcObject = partnerStream;
+            }else{
+                console.log("yeah its not here guys");
+            }
+        }
+    },[partnerStream, partnerVideoRef])
 
     function handleEnter(e){
         if(e.keyCode === 13){
@@ -202,18 +220,26 @@ export function MsgPanelContent(props){
         });
         return renderedMessages;
     }
+    let partnerVideoWindow;
+    if(partnerVideoRef.current){
+        if(partnerStream!=null){
+            console.log("new video Rando stream!")
+            partnerVideoRef.current.srcObject = partnerStream;
+        }else{
+            console.log("yeah its not here guys");
+        }
+    }
    if(chatUser === null || rooms[chatUser] === null){
-       return <MsgPanel ></MsgPanel>
+       return <MsgPanel > <RemoteVideo ref={partnerVideoRef} autoPlay  id="local-video"></RemoteVideo></MsgPanel>
    }else{
        
        console.log(rooms);
        return(
         <MsgPanel>
-            
+             <RemoteVideo ref={partnerVideoRef} autoPlay muted id="local-video"></RemoteVideo>
             <MsgHistory>
                 <div> - Chat History with {users[chatUser].name} - </div>
                 <ShowHistory></ShowHistory> 
-                {/* <VideoCall></VideoCall> */}
             </MsgHistory>
             <MsgInput>
                 <input 
