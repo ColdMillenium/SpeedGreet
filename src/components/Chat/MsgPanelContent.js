@@ -16,129 +16,7 @@ import msgSendBtn from '../../assets/msgSendBtn.png';
 import { Divider } from '@material-ui/core';
 import VideoCall from './VideoCall'
 
-const MsgPanel = styled.div`
-    
-    position: relative;
-    background-color: transparent;
-    min-width: 300px;
-    width: 100%;
-`;
-const MsgHistory = styled.div`
-    
-    margin: auto;
-    height: calc(100% - 75px);
-    padding: 0 30px;
-    overflow-y: auto;
 
-`;
-const ReceivedMsg = styled.div`
-    height: fit-content;
-    width: fit-content;
-    
-    
-    .from{
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 3px;
-    }
-    .name{
-        font-weight: bold;
-        font-size: 16px;
-    }
-    .time{
-        font-size: 14px;
-        color: rgba(222, 222, 222, 1);
-;
-    }
-    .msg{
-        color: #EFEFEF;
-        background: linear-gradient(180deg, rgba(163, 240, 240, 0.6) 0%, rgba(163, 240, 240, 0.384) 99.99%);
-        width: fit-content;
-        font-size: 14px;
-        padding: 12px;
-        border-radius: 0 30px 30px 30px;
-        box-shadow: 0px 5px 4px rgba(0, 0, 0, 0.25);
-    }
-    
-`;
-
-const SentMsg = styled(ReceivedMsg)`
-    margin: 0 0 0 auto;
-    .from{
-        justify-content: right;
-    }
-    .msg{
-        border-radius: 30px 0 30px 30px;
-        background: linear-gradient(180deg, rgba(156, 232, 120, 0.6) 0%, rgba(156, 232, 120, 0.5175) 99.99%, rgba(156, 232, 120, 0.384) 100%);
-
-    }
-`;
-const RemoteVideo = styled.video`
-    position: absolute;
-    width: 100%;
-    top:0;
-    
-    border: 20px solid red;
-`;
-
-const MsgInput = styled.div`
-   
-    position: absolute;
-    bottom: 0;
-    left:0;
-    right:0;
-    background: #0D4C4A;
-    height: 75px;
-  
-    padding: 0 10px 0 30px;
-    
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
-    
-
-
-
-    input{
-        background: transparent;
-        color: #B1FFAB;
-        border: none;
-        width: calc(100% - 40px);
-        height:100%;
-        font-family: 'Roboto';
-        font-weight: light;
-        
-    }
-    input:focus{
-        outline: 0;
-
-    }
-    input:active{
-        border: none
-    }
-    button{
-        color: #B1FFAB;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0;
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        transition: all 0.1s ease;
-        height: 100%;
-        width: 40px
-    }
-    button:active{
-        transform: scale(0.9);
-        border: none;
-    }
-    button img{
-        height: 40px; 
-    }
-`;
 
 export function MsgPanelContent(props){
 
@@ -230,13 +108,15 @@ export function MsgPanelContent(props){
         }
     }
    if(chatUser === null || rooms[chatUser] === null){
-       return <MsgPanel > <RemoteVideo ref={partnerVideoRef} autoPlay  id="local-video"></RemoteVideo></MsgPanel>
+       return <MsgPanel > 
+               <VideoCall></VideoCall>
+           </MsgPanel>
    }else{
        
        console.log(rooms);
        return(
         <MsgPanel>
-             <RemoteVideo ref={partnerVideoRef} autoPlay muted id="local-video"></RemoteVideo>
+               <VideoCall></VideoCall>
             <MsgHistory>
                 <div> - Chat History with {users[chatUser].name} - </div>
                 <ShowHistory></ShowHistory> 
@@ -246,7 +126,7 @@ export function MsgPanelContent(props){
                     ref={inputRef}
                     type="text"
                     onKeyDown={(e)=> {handleEnter(e)} }
-                    onChange={(e)=>{handleInputChange(e)}} 
+                    // onChange={(e)=>{handleInputChange(e)}} 
                     placeholder="Type something here to send..."
                 />
                 <button>
@@ -267,3 +147,138 @@ export function MsgPanelContent(props){
 
 
 export default MsgPanelContent;
+
+const MsgPanel = styled.div`
+    
+    position: relative;
+    background-color: transparent;
+    min-width: 300px;
+    width: 100%;
+`;
+const MsgHistory = styled.div`
+    
+    margin: auto;
+    height: calc(100% - 75px);
+    padding: 0 30px;
+    overflow-y: auto;
+
+`;
+const ReceivedMsg = styled.div`
+    height: fit-content;
+    width: fit-content;
+    
+    
+    .from{
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 3px;
+    }
+    .name{
+        font-weight: bold;
+        font-size: 16px;
+    }
+    .time{
+        font-size: 14px;
+        color: rgba(222, 222, 222, 1);
+;
+    }
+    .msg{
+        color: #EFEFEF;
+        background: linear-gradient(180deg, rgba(163, 240, 240, 0.6) 0%, rgba(163, 240, 240, 0.384) 99.99%);
+        width: fit-content;
+        font-size: 14px;
+        padding: 12px;
+        border-radius: 0 30px 30px 30px;
+        box-shadow: 0px 5px 4px rgba(0, 0, 0, 0.25);
+    }
+    
+`;
+
+const SentMsg = styled(ReceivedMsg)`
+    margin: 0 0 0 auto;
+    .from{
+        justify-content: right;
+    }
+    .msg{
+        border-radius: 30px 0 30px 30px;
+        background: linear-gradient(180deg, rgba(156, 232, 120, 0.6) 0%, rgba(156, 232, 120, 0.5175) 99.99%, rgba(156, 232, 120, 0.384) 100%);
+
+    }
+`;
+const RemoteVideoWrap = styled.div`
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 9, 43, 0.79);
+    height:100%;
+    width:100%;
+
+
+`
+const RemoteVideo = styled.video`
+    width:100%;
+    background: url("https://i.vimeocdn.com/video/825140621.webp?mw=1500&mh=844&q=70");
+    overflow:hidden;
+`;
+
+const MsgInput = styled.div`
+   
+    position: absolute;
+    bottom: 0;
+    left:0;
+    right:0;
+    background: #0D4C4A;
+    height: 75px;
+  
+    padding: 0 10px 0 30px;
+    
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
+    
+
+
+
+    input{
+        background: transparent;
+        color: #B1FFAB;
+        border: none;
+        width: calc(100% - 40px);
+        height:100%;
+        font-family: 'Roboto';
+        font-weight: light;
+        
+    }
+    input:focus{
+        outline: 0;
+
+    }
+    input:active{
+        border: none
+    }
+    button{
+        color: #B1FFAB;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        transition: all 0.1s ease;
+        height: 100%;
+        width: 40px
+    }
+    button:active{
+        transform: scale(0.9);
+        border: none;
+    }
+    button img{
+        height: 40px; 
+    }
+`;

@@ -28,13 +28,17 @@ export function VideoCall(props) {
     const userVideoRef = useRef();
     const partnerVideoRef = useRef();
     
+    useEffect(()=>{
+        if(partnerVideoRef.current){
+            if(partnerStream!=null){
+                console.log("new video Rando stream!")
+                partnerVideoRef.current.srcObject = partnerStream;
+            }else{
+                console.log("yeah its not here guys");
+            }
+        }
+    },[partnerStream, partnerVideoRef]);
 
-
-
-    // let userList = [];
-    // for(let user of users ){
-    //     userList.push(<OnlineUser>{user}</OnlineUser>)
-    // }
     let userVideoWindow;
     if(callEnding){
         leaveCall();
@@ -55,39 +59,40 @@ export function VideoCall(props) {
         );
     }
 
-    let partnerVideoWindow;
-    if (callAccepted ) {
-        if(partnerVideoRef.current){
-            console.log("partner REF IS HERE!")
+    if(partnerVideoRef.current){
+        if(partnerStream!=null){
+            console.log("new video Rando stream!")
             partnerVideoRef.current.srcObject = partnerStream;
-        } 
-        console.log("showing partner stream");
-        partnerVideoWindow = (
-            <div>
-               
-                <RemoteVideo ref={partnerVideoRef} autoPlay id="remote-video"></RemoteVideo>
-            </div>
-        );
+        }else{
+            console.log("yeah its not here guys");
+        }
     }
 
     return (
-        
             <VideoCallContainer>
-                {partnerVideoWindow}
-                {/* {userVideoWindow} */}
+               
+                <PartnerVideo ref={partnerVideoRef} autoPlay id="local-video"></PartnerVideo>
             </VideoCallContainer>
     )
 }
 
 const VideoCallContainer = styled.div`
-   
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 9, 43, 0.79);
+    height:100%;
+    width:100%;
 
-`;
-const RemoteVideo = styled.video`
-    object-fit: fill;
-    width: 100%;
-    height: 100%;
-    margin: 0px;
+
+`
+const PartnerVideo = styled.video`
+    width:100%;
+    background: url("https://i.vimeocdn.com/video/825140621.webp?mw=1500&mh=844&q=70");
+    overflow:hidden;
 `;
 const LocalVideo = styled.video`
     position: absolute;
